@@ -7,7 +7,7 @@ name: Hello-World-Actions
 on:
   # Triggers the workflow on push events but only for the main branch
   push:
-    branches: [main]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
