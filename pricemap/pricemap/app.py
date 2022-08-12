@@ -40,55 +40,6 @@ def index():
 
 @app.route("/update_data")
 def update_data():
-    """Update the data."""
-    update()
-    return "Datz gut", 200
-
-
-# display the table listings
-@app.route("/listings")
-def listings():
-    """Display the table listings."""
-    cur = g.db.cursor()
-    # List 20 first listings
-    cur.execute("SELECT * FROM listings LIMIT 20;")
-    listings = cur.fetchall()
-    return listings
-
-
-# Get a listing by id
-@app.route("/listings/<int:listing_id>")
-def get_listing(listing_id):
-    """Get a listing by id."""
-    cur = g.db.cursor()
-    cur.execute("SELECT * FROM listings WHERE id = %s;", (listing_id,))
-    listing = cur.fetchone()
-    return [listing]
-
-
-
-# Update a listing by id
-@app.route("/listings/<int:listing_id>", methods=["PUT"])
-def update_listing(listing_id):
-    """Update a listing by id."""
-
-    apartment = Apartment(
-        listing_id=listing_id,
-        place_id=1,
-        price=random.randint(100, 1000),
-        area=50,
-        room_count=42,
-    )
-    crud = CRUDApartment(Database())
-    crud.update(apartment, app.logger)
-    return get_listing(listing_id)
-
-
-# Delete listings table
-@app.route("/listings", methods=["DELETE"])
-def delete_listings():
-    """Delete listings table."""
-    cur = g.db.cursor()
-    cur.execute("DROP TABLE listings;")
-    return "Table listings deleted", 200
-
+   '''Update the data.'''
+   update()
+   return "", 200

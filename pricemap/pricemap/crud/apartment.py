@@ -11,8 +11,27 @@ class CRUDApartment:
 
     #  self.db = db
 
+    def get(self, listing_id):
+        # Get apartment by listing_id
+        sql = """
+        SELECT * FROM listings WHERE id = %s
+        """
+        try:
+            self.database.db_cursor.execute(sql, (listing_id,))
+            listing = self.database.db_cursor.fetchone()
+            return listing
+        except Exception as e:
+            print("Error: maybe table already exists?", e)
+            return None
+
     def create(self, apartment):
         # Insert apartment object in database
+        # If apartment already exists, update it
+
+        if self.get(apartment.listing_id) is not None:
+            self.update(apartment)
+            return apartment
+
         sql = """
         INSERT INTO listings (id, place_id, price, area, room_count, seen_at)
         VALUES (%s, %s, %s, %s, %s, %s)
@@ -36,11 +55,12 @@ class CRUDApartment:
             return None
         return apartment
 
-    def update(self, apartment, logger):
+    def update(self, apartment):
         # Update price and area of apartment in database
+        # TODO le seen_at a un problème
         sql = """
         UPDATE listings
-        SET price = %s, area = %s, room_count = %s, place_id = %s
+        SET price = %s, area = %s, room_count = %s, place_id = %s, seen_at = NOW()
         WHERE id = %s 
         """
 

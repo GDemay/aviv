@@ -6,20 +6,21 @@ from pricemap.core.config import settings
 from pricemap.database.session import Database
 from pricemap.schemas.apartment import Apartment
 from pricemap.crud.apartment import CRUDApartment
+
 # from pricemap.core.apartment import set_listings_db
 
-def set_listing_values(listing):
+
+def set_listing_values(listing, geom):
     # Create empty Apartment object
     apartment = Apartment()
     apartment.listing_id = listing["listing_id"]
+    apartment.place_id = geom
     try:
         apartment.room_count = (
             1
             if "Studio" in listing["title"]
             else int(
-                "".join(
-                    [s for s in listing["title"].split("pièces")[0] if s.isdigit()]
-                )
+                "".join([s for s in listing["title"].split("pièces")[0] if s.isdigit()])
             )
         )
     except:
@@ -32,10 +33,7 @@ def set_listing_values(listing):
 
     try:
         apartment.area = int(
-            listing["title"]
-            .split("-")[1]
-            .replace(" ", "")
-            .replace("\u00a0m\u00b2", "")
+            listing["title"].split("-")[1].replace(" ", "").replace("\u00a0m\u00b2", "")
         )
     except:
         apartment.area = 0
@@ -53,16 +51,13 @@ def get_items_from_listingapi(listings, geom):
     # Create empty Apartment object
 
     for listing in listings:
-      # Set all values for apartment object (price_id, place_id, price, area, room_count, seen_at)
-      apartment = set_listing_values(listing)
-      
-      # From CRUDApartment, we call the create function to insert the apartment object in the database
-      crud_apartment = CRUDApartment(database=database)
-      if not crud_apartment.create(apartment=apartment):
-        print("Error: apartment not created")
+        # Set all values for apartment object (price_id, place_id, price, area, room_count, seen_at)
+        apartment = set_listing_values(listing, geom)
 
-    
-        
+        # From CRUDApartment, we call the create function to insert the apartment object in the database
+        crud_apartment = CRUDApartment(database=database)
+        if not crud_apartment.create(apartment=apartment):
+            print("Error: apartment not created")
 
 
 def update():
