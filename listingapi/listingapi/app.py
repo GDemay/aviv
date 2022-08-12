@@ -12,8 +12,8 @@ def listings(place_id: int):
     query_params = dict(request.args)
     try:
         page = int(query_params.get("page", 1))
-    except ValueError:
-        raise BadRequest(f"\"page\" should be an integer, given value: {page}!")
+    except ValueError as e:
+        raise BadRequest(f"\"page\" should be an integer, given value: {page}!") from e
 
     cwd = os.path.dirname(__file__)
     file_path = os.path.join(cwd, "storage", f"{place_id}.json")

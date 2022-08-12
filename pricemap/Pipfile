@@ -2,6 +2,8 @@
 Flask = "*"
 psycopg2-binary = "*"
 requests = "*"
+sqlalchemy = "*"
+pydantic = "*"
 
 [requires]
 python_version = "3.8"
