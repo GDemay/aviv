@@ -43,3 +43,51 @@ def update_data():
    '''Update the data.'''
    update()
    return "", 200
+ 
+# Listing an listing id
+@app.route("/listings/<int:listing_id>", methods=["GET"])
+def listing(listing_id):
+    """Get a listing from the database."""
+    database = Database()
+    crud_apartment = CRUDApartment(database=database)
+    listing = crud_apartment.get(listing_id=listing_id)
+    return listing
+  
+# Listing all listings
+@app.route("/listings")
+def listings():
+    """Get all listings from the database."""
+    database = Database()
+    crud_apartment = CRUDApartment(database=database)
+    listings = crud_apartment.get_all()
+    return listings
+
+# Update a listing
+@app.route("/listings/<int:listing_id>", methods=["PUT"])
+def update_listing(listing_id):
+    """Update a listing from the database."""
+    database = Database()
+    crud_apartment = CRUDApartment(database=database)
+    listing = crud_apartment.get(listing_id=listing_id)
+    listing.price = 1000
+    crud_apartment.update(apartment=listing)
+    return listing
+
+# Delete a listing
+@app.route("/listings/<int:listing_id>", methods=["DELETE"])
+def delete_listing(listing_id):
+    """Delete a listing from the database."""
+    database = Database()
+    crud_apartment = CRUDApartment(database=database)
+    listing = crud_apartment.get(listing_id=listing_id)
+    crud_apartment.delete(apartment=listing)
+    return listing
+
+# Delete listing table
+@app.route("/listings", methods=["DELETE"])
+def delete_listing_table():
+    """Delete the listing table from the database."""
+    database = Database()
+    crud_apartment = CRUDApartment(database=database)
+    crud_apartment.delete_table()
+    return "Deleted table"

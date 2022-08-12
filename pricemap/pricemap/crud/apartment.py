@@ -19,7 +19,27 @@ class CRUDApartment:
         try:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
-            return listing
+            # Create a new apartment object
+            apartment = Apartment(
+                listing_id=listing[0],
+                place_id=listing[1],
+                price=listing[2],
+                area=listing[3],
+                room_count=listing[4],
+                seen_at=listing[5],
+            )
+            return apartment
+        except Exception as e:
+            print("Error: maybe table already exists?", e)
+            return None
+
+    def get_all(self):
+        sql = """
+        SELECT * FROM listings LIMIT 100
+        """
+        try:
+            self.database.db_cursor.execute(sql)
+            return self.database.db_cursor.fetchall()
         except Exception as e:
             print("Error: maybe table already exists?", e)
             return None
