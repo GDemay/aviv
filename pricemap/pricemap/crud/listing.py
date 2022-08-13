@@ -19,8 +19,7 @@ class CRUDListing:
         try:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
-            # Create a new apartment object
-            apartment = Listing(
+            return Listing(
                 listing_id=listing[0],
                 place_id=listing[1],
                 price=listing[2],
@@ -28,9 +27,9 @@ class CRUDListing:
                 room_count=listing[4],
                 seen_at=listing[5],
             )
-            return apartment
+
         except Exception as e:
-            print("Error while getting listing_id:" + str(listing_id), e)
+            print(f"Error while getting listing_id:{str(listing_id)}", e)
             return None
 
     def get_all(self):
