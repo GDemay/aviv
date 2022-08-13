@@ -67,6 +67,7 @@ def get_items_from_listingapi(listings, geom):
         # From CRUDApartment, we call the create function to insert the apartment object in the database
         crud_apartment = CRUDListing(database=database)
         if not crud_apartment.create(listing=apartment):
+            # TODO Not the best implement of error handling
             logger.error("Error: apartment not created")
 
 
