@@ -1,3 +1,4 @@
+""" This is the endpoints for Listing"""
 from typing import List
 
 from flask import Blueprint, request
@@ -12,7 +13,11 @@ listing_blueprint = Blueprint("listing_blueprint", __name__)
 # Listing an listing id
 @listing_blueprint.route("/<int:listing_id>", methods=["GET"])
 def get_listing(listing_id):
-    """Get a listing from the database."""
+    """Get a Listing from the database.
+
+    Returns:
+      Listing : Return a json object with the listing
+    """
     crud_apartment = CRUDListing(database=Database())
     return crud_apartment.get(listing_id=listing_id).dict()
 
@@ -79,11 +84,3 @@ def delete_listing_table():
     crud_apartment = CRUDListing(database=Database())
     crud_apartment.delete()
     return "Deleted table"
-
-
-# test logger
-@listing_blueprint.route("/logger", methods=["GET"])
-def logger_test():
-
-    logger.error("test info")
-    return "test logger"

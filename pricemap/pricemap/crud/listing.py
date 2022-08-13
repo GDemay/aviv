@@ -1,3 +1,4 @@
+""" This is the CRUD for Listing (create, read, update, delete) """
 from pricemap.core.logger import logger
 from pricemap.schemas.listing import Listing
 
@@ -5,9 +6,6 @@ from pricemap.schemas.listing import Listing
 class CRUDListing:
     def __init__(self, database):
         self.database = database
-
-    def logger_test(self):
-        pass
 
     def get(self, listing_id: int):
         # Get apartment by listing_id
@@ -76,7 +74,6 @@ class CRUDListing:
             logger.error("Error while creating listing", e)
             return None
 
-        logger.debug(f"Successfully created listing_id:{listing.listing_id}")
         return listing
 
     def update(self, listing: Listing):

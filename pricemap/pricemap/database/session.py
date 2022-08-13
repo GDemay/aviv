@@ -23,6 +23,20 @@ class Database:
     """
         self.execute_sql(sql)
 
+    def init_history_price_table(self):
+        # This function create a new table that will contain the history of the price of each listing
+        # There is a few fields like : id (auto_increment), listing_id (the id of the listing from listing table), price (the price of the listing), date (the date when the price was seen)
+
+        sql = """
+      CREATE TABLE IF NOT EXISTS history_price (
+          id PRIMARY KEY,
+          listing_id INTEGER FOREIGN KEY REFERENCES listings(id),
+          price INTEGER,
+          date TIMESTAMP NOT NULL
+      );
+      """
+        self.execute_sql(sql)
+
     def delete_table(self):
         sql = """
         DROP TABLE listings;
