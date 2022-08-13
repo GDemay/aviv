@@ -12,8 +12,7 @@ def get_listing(listing_id):
     """Get a listing from the database."""
     database = Database()
     crud_apartment = CRUDListing(database=database)
-    listing = crud_apartment.get(listing_id=listing_id)
-    return listing
+    return crud_apartment.get(listing_id=listing_id)
 
 
 # Listing all listings
@@ -22,8 +21,7 @@ def listings():
     """Get all listings from the database."""
     database = Database()
     crud_apartment = CRUDListing(database=database)
-    listings = crud_apartment.get_all()
-    return listings
+    return crud_apartment.get_all()
 
 
 # Update a listing
