@@ -1,11 +1,11 @@
-from pricemap.schemas.apartment import Apartment
+from pricemap.schemas.listing import Listing
 from pricemap.database.session import Database
 from flask import Flask, g, render_template
 import psycopg2
 import requests
 
 
-class CRUDApartment:
+class CRUDListing:
     def __init__(self, database):
         self.database = database
 
@@ -20,7 +20,7 @@ class CRUDApartment:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
             # Create a new apartment object
-            apartment = Apartment(
+            apartment = Listing(
                 listing_id=listing[0],
                 place_id=listing[1],
                 price=listing[2],

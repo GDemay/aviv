@@ -1,16 +1,11 @@
 import re, requests
 import logging
-from pricemap.models.apartment import Apartment
-from pricemap.crud.apartment import CRUDApartment
-
-def set_listings_db(place_id):
-
-    return listings
-
+from pricemap.models.listing import Listing
+from pricemap.crud.listing import CRUDListing
 
 # Create an appartment object from listing
-def create_appartment(listing, place_id: int):
-    return Apartment(
+def create_listing(listing, place_id: int):
+    return Listing(
         listing_id=listing["listing_id"],
         place_id=place_id,
         price=set_price(listing["price"]),

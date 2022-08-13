@@ -2,21 +2,22 @@ from flask import Flask, g, render_template
 import psycopg2
 import requests
 from pricemap.blueprints.api import api
+from pricemap.blueprints.listing import listing_blueprint
 import re
 import random
-from pricemap.core import apartment
+from pricemap.core import listing
 from pricemap.update_data import update
-from pricemap.core.apartment import set_listings_db
 import logging
 from pricemap.database.session import Database
-from pricemap.schemas.apartment import Apartment
-from pricemap.crud.apartment import CRUDApartment
+from pricemap.schemas.listing import Listing
+from pricemap.crud.listing import CRUDListing
 from datetime import datetime, timedelta
 from random import randrange
 
 app = Flask(__name__)
 app.config.from_object("settings")
 app.register_blueprint(api, url_prefix="/api")
+app.register_blueprint(listing_blueprint, url_prefix="/listing")
 
 
 @app.before_request
@@ -40,54 +41,7 @@ def index():
 
 @app.route("/update_data")
 def update_data():
-   '''Update the data.'''
-   update()
-   return "", 200
- 
-# Listing an listing id
-@app.route("/listings/<int:listing_id>", methods=["GET"])
-def listing(listing_id):
-    """Get a listing from the database."""
-    database = Database()
-    crud_apartment = CRUDApartment(database=database)
-    listing = crud_apartment.get(listing_id=listing_id)
-    return listing
-  
-# Listing all listings
-@app.route("/listings")
-def listings():
-    """Get all listings from the database."""
-    database = Database()
-    crud_apartment = CRUDApartment(database=database)
-    listings = crud_apartment.get_all()
-    return listings
+    """Update the data."""
+    update()
+    return "", 200
 
-# Update a listing
-@app.route("/listings/<int:listing_id>", methods=["PUT"])
-def update_listing(listing_id):
-    """Update a listing from the database."""
-    database = Database()
-    crud_apartment = CRUDApartment(database=database)
-    listing = crud_apartment.get(listing_id=listing_id)
-    listing["price"] = 1000
-    crud_apartment.update(apartment=listing)
-    return listing
-
-# Delete a listing
-@app.route("/listings/<int:listing_id>", methods=["DELETE"])
-def delete_listing(listing_id):
-    """Delete a listing from the database."""
-    database = Database()
-    crud_apartment = CRUDApartment(database=database)
-    listing = crud_apartment.get(listing_id=listing_id)
-    crud_apartment.delete(apartment=listing)
-    return listing
-
-# Delete listing table
-@app.route("/listings", methods=["DELETE"])
-def delete_listing_table():
-    """Delete the listing table from the database."""
-    database = Database()
-    crud_apartment = CRUDApartment(database=database)
-    crud_apartment.delete()
-    return "Deleted table"

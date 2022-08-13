@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 # Shared properties
-class Apartment(BaseModel):
+class Listing(BaseModel):
     """_summary_ : This is the base model for a user."""
 
     listing_id: Optional[int] = None

@@ -4,15 +4,13 @@ import psycopg2
 from datetime import datetime
 from pricemap.core.config import settings
 from pricemap.database.session import Database
-from pricemap.schemas.apartment import Apartment
-from pricemap.crud.apartment import CRUDApartment
-
-# from pricemap.core.apartment import set_listings_db
+from pricemap.schemas.listing import Listing
+from pricemap.crud.listing import CRUDListing
 
 
 def set_listing_values(listing, geom):
     # Create empty Apartment object
-    apartment = Apartment()
+    apartment = Listing()
     apartment.listing_id = listing["listing_id"]
     apartment.place_id = geom
     try:
@@ -55,7 +53,7 @@ def get_items_from_listingapi(listings, geom):
         apartment = set_listing_values(listing, geom)
 
         # From CRUDApartment, we call the create function to insert the apartment object in the database
-        crud_apartment = CRUDApartment(database=database)
+        crud_apartment = CRUDListing(database=database)
         if not crud_apartment.create(apartment=apartment):
             print("Error: apartment not created")
 

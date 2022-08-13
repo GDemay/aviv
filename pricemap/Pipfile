@@ -4,6 +4,7 @@ psycopg2-binary = "*"
 requests = "*"
 sqlalchemy = "*"
 pydantic = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"

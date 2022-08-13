@@ -1,8 +1,8 @@
 from sqlalchemy import Boolean, Column, Integer, String
 
 
-class Apartment():
-    __tablename__ = "apartment"
+class Listing():
+    __tablename__ = "listing"
     listing_id = Column(Integer, primary_key=True)
     place_id = Column(Integer)
     price = Column(Integer)
