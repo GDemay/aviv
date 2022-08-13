@@ -34,9 +34,7 @@ class CRUDListing:
             )
 
         except Exception as e:
-            logger.error(
-                f"Error while getting listing_id:{str(listing_id)}", e
-            )
+            logger.error(f"Error while getting listing_id:{listing_id}", e)
             return None
 
     def get_all(self):
