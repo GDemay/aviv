@@ -21,7 +21,7 @@ class CRUDListing:
             listing = self.database.db_cursor.fetchone()
 
             if listing is None:
-                logger.debug(f"Listing not found")
+                logger.debug("Listing not found")
                 return None
 
             return Listing(
