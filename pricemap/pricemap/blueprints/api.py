@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
-from flask import Blueprint, jsonify, g
+import json
 
 import psycopg2.extras
-import json
+from flask import Blueprint, g, jsonify
 
 api = Blueprint("api", __name__)
 

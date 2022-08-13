@@ -9,3 +9,6 @@ clean:
 
 clean-all:
 	docker-compose down --remove-orphans -v
+
+pre-commit:
+	pre-commit run --all-files

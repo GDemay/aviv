@@ -1,8 +1,5 @@
+from pricemap.core.logger import logger
 from pricemap.schemas.listing import Listing
-from pricemap.database.session import Database
-from flask import Flask, g, render_template
-import psycopg2
-import requests
 
 
 class CRUDListing:
@@ -11,7 +8,10 @@ class CRUDListing:
 
     #  self.db = db
 
-    def get(self, listing_id):
+    def logger_test(self):
+        pass
+
+    def get(self, listing_id: int):
         # Get apartment by listing_id
         sql = """
         SELECT * FROM listings WHERE id = %s
@@ -19,6 +19,11 @@ class CRUDListing:
         try:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
+
+            logger.debug("Successfully get listing_id:", listing_id)
+            if listing is None:
+                return None
+
             return Listing(
                 listing_id=listing[0],
                 place_id=listing[1],
@@ -29,7 +34,9 @@ class CRUDListing:
             )
 
         except Exception as e:
-            print(f"Error while getting listing_id:{str(listing_id)}", e)
+            logger.error(
+                f"Error while getting listing_id:{str(listing_id)}", e
+            )
             return None
 
     def get_all(self):
@@ -40,16 +47,17 @@ class CRUDListing:
             self.database.db_cursor.execute(sql)
             return self.database.db_cursor.fetchall()
         except Exception as e:
-            print("Error while getting all listings", e)
+            logger.error("Error while getting all listings", e)
             return None
 
-    def create(self, apartment):
+    def create(self, listing: Listing):
         # Insert apartment object in database
         # If apartment already exists, update it
 
-        if self.get(apartment.listing_id) is not None:
-            self.update(apartment)
-            return apartment
+        logger.debug("Create listing for listing_id:", listing.listing_id)
+        if self.get(listing.listing_id) is not None:
+            self.update(listing)
+            return listing
 
         sql = """
         INSERT INTO listings (id, place_id, price, area, room_count, seen_at)
@@ -59,22 +67,24 @@ class CRUDListing:
             self.database.db_cursor.execute(
                 sql,
                 (
-                    apartment.listing_id,
-                    apartment.place_id,
-                    apartment.price,
-                    apartment.area,
-                    apartment.room_count,
-                    apartment.seen_at,
+                    listing.listing_id,
+                    listing.place_id,
+                    listing.price,
+                    listing.area,
+                    listing.room_count,
+                    listing.seen_at,
                 ),
             )
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            print("Error while creating listing", e)
+            logger.error("Error while creating listing", e)
             return None
-        return apartment
 
-    def update(self, apartment):
+        logger.debug("Successfully created listing_id:", listing.listing_id)
+        return listing
+
+    def update(self, listing: Listing):
         # Update price and area of apartment in database
         # TODO le seen_at a un problème
         sql = """
@@ -87,30 +97,59 @@ class CRUDListing:
             self.database.db_cursor.execute(
                 sql,
                 (
-                    apartment.price,
-                    apartment.area,
-                    apartment.room_count,
-                    apartment.place_id,
-                    apartment.listing_id,
+                    listing.price,
+                    listing.area,
+                    listing.room_count,
+                    listing.place_id,
+                    listing.listing_id,
                 ),
             )
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            print("Error while updating listing", e)
+            logger.debug("Error while updating listing", e)
             return None
-        return apartment
 
-    # delete table
-    def delete(self):
-        sql = """
-        DROP TABLE listings
+        logger.debug("Successfully updated listing_id:", listing.listing_id)
+        return listing
+
+    def delete(self, listing_id: int):
+        """Delete a listing from id
+
+        Args:
+            listing_id (int): listing id
         """
+
+        sql = """
+      DELETE FROM listings WHERE id = %s
+      """
+        try:
+            # get listing
+            listing = self.get(listing_id)
+            if listing is None:
+                return None
+            self.database.db_cursor.execute(sql, (listing_id,))
+            self.database.db.commit()
+        except Exception as e:
+            self.database.db.rollback()
+            logger.error("Error while deleting listing", e)
+            return None
+
+        logger.debug("Successfully deleted listing_id:", listing_id)
+        return listing_id
+
+    def delete_table_listing(self):
+        """Delete table listing"""
+        sql = """
+      DROP TABLE listings
+      """
         try:
             self.database.db_cursor.execute(sql)
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            print("Error while deleting table", e)
+            logger.error("Error while deleting table listing", e)
             return None
-        return True
+
+        logger.debug("Successfully deleted table listing")
+        return None

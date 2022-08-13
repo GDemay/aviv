@@ -1,11 +1,12 @@
-from flask import g, current_app
-import requests
-import psycopg2
 from datetime import datetime
+
+import requests
+
 from pricemap.core.config import settings
+from pricemap.core.logger import logger
+from pricemap.crud.listing import CRUDListing
 from pricemap.database.session import Database
 from pricemap.schemas.listing import Listing
-from pricemap.crud.listing import CRUDListing
 
 
 def set_listing_values(listing, geom):
@@ -18,20 +19,31 @@ def set_listing_values(listing, geom):
             1
             if "Studio" in listing["title"]
             else int(
-                "".join([s for s in listing["title"].split("pièces")[0] if s.isdigit()])
+                "".join(
+                    [
+                        s
+                        for s in listing["title"].split("pièces")[0]
+                        if s.isdigit()
+                    ]
+                )
             )
         )
     except:
         apartment.room_count = 0
 
     try:
-        apartment.price = int("".join([s for s in listing["price"] if s.isdigit()]))
+        apartment.price = int(
+            "".join([s for s in listing["price"] if s.isdigit()])
+        )
     except:
         apartment.price = 0
 
     try:
         apartment.area = int(
-            listing["title"].split("-")[1].replace(" ", "").replace("\u00a0m\u00b2", "")
+            listing["title"]
+            .split("-")[1]
+            .replace(" ", "")
+            .replace("\u00a0m\u00b2", "")
         )
     except:
         apartment.area = 0
@@ -54,8 +66,8 @@ def get_items_from_listingapi(listings, geom):
 
         # From CRUDApartment, we call the create function to insert the apartment object in the database
         crud_apartment = CRUDListing(database=database)
-        if not crud_apartment.create(apartment=apartment):
-            print("Error: apartment not created")
+        if not crud_apartment.create(listing=apartment):
+            logger.error("Error: apartment not created")
 
 
 def update():
@@ -75,4 +87,3 @@ def update():
                 get_items_from_listingapi(listings=response.json(), geom=geom)
             else:
                 break
-

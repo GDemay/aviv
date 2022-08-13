@@ -1,18 +1,9 @@
-from flask import Flask, g, render_template
 import psycopg2
-import requests
+from flask import Flask, g, render_template
+
 from pricemap.blueprints.api import api
 from pricemap.blueprints.listing import listing_blueprint
-import re
-import random
-from pricemap.core import listing
 from pricemap.update_data import update
-import logging
-from pricemap.database.session import Database
-from pricemap.schemas.listing import Listing
-from pricemap.crud.listing import CRUDListing
-from datetime import datetime, timedelta
-from random import randrange
 
 app = Flask(__name__)
 app.config.from_object("settings")
@@ -25,7 +16,11 @@ def before_request():
     """Before every requests, connect to database in case of any disconnection."""
     if not hasattr(app, "_request_counter"):
         app._request_counter = 0
-    if not hasattr(app, "db") or app.db.closed or app._request_counter == 10000:
+    if (
+        not hasattr(app, "db")
+        or app.db.closed
+        or app._request_counter == 10000
+    ):
         if hasattr(app, "db"):
             app.db.close()
         app.db = psycopg2.connect(**app.config["DATABASE"])
@@ -44,4 +39,3 @@ def update_data():
     """Update the data."""
     update()
     return "", 200
-

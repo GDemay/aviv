@@ -1,7 +1,7 @@
-from flask import g, current_app
-import requests
 import psycopg2
-from datetime import datetime
+from flask import g
+
+from pricemap.core.logger import logger
 
 
 class Database:
@@ -35,5 +35,5 @@ class Database:
             self.db.commit()
         except Exception as e:
             self.db.rollback()
-            print("Error executing SQL", e)
+            logger.error("Error executing SQL", e)
             return

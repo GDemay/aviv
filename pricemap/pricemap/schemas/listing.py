@@ -1,5 +1,6 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -13,4 +14,3 @@ class Listing(BaseModel):
     area: Optional[int] = None
     room_count: Optional[int] = None
     seen_at: Optional[datetime] = None
-

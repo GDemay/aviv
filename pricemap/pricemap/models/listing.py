@@ -1,7 +1,7 @@
-from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Column, Integer
 
 
-class Listing():
+class Listing:
     __tablename__ = "listing"
     listing_id = Column(Integer, primary_key=True)
     place_id = Column(Integer)
