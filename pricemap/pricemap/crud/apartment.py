@@ -30,7 +30,7 @@ class CRUDApartment:
             )
             return apartment
         except Exception as e:
-            print("Error: maybe table already exists?", e)
+            print("Error while getting listing_id:" + str(listing_id), e)
             return None
 
     def get_all(self):
@@ -41,7 +41,7 @@ class CRUDApartment:
             self.database.db_cursor.execute(sql)
             return self.database.db_cursor.fetchall()
         except Exception as e:
-            print("Error: maybe table already exists?", e)
+            print("Error while getting all listings", e)
             return None
 
     def create(self, apartment):
@@ -71,7 +71,7 @@ class CRUDApartment:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            print("Error: maybe table already exists?", e)
+            print("Error while creating listing", e)
             return None
         return apartment
 
@@ -98,6 +98,20 @@ class CRUDApartment:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            print("Error: maybe table already exists?", e)
+            print("Error while updating listing", e)
             return None
         return apartment
+
+    # delete table
+    def delete(self):
+        sql = """
+        DROP TABLE listings
+        """
+        try:
+            self.database.db_cursor.execute(sql)
+            self.database.db.commit()
+        except Exception as e:
+            self.database.db.rollback()
+            print("Error while deleting table", e)
+            return None
+        return True

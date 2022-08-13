@@ -69,7 +69,7 @@ def update_listing(listing_id):
     database = Database()
     crud_apartment = CRUDApartment(database=database)
     listing = crud_apartment.get(listing_id=listing_id)
-    listing.price = 1000
+    listing["price"] = 1000
     crud_apartment.update(apartment=listing)
     return listing
 
@@ -89,5 +89,5 @@ def delete_listing_table():
     """Delete the listing table from the database."""
     database = Database()
     crud_apartment = CRUDApartment(database=database)
-    crud_apartment.delete_table()
+    crud_apartment.delete()
     return "Deleted table"
