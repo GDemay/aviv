@@ -11,6 +11,8 @@ class CRUDListing:
         # Get apartment by listing_id
         if not isinstance(listing_id, int):
             return None
+
+        # Test
         sql = """
         SELECT * FROM listings WHERE id = %s
         """
