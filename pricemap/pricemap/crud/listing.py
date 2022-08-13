@@ -6,13 +6,13 @@ class CRUDListing:
     def __init__(self, database):
         self.database = database
 
-    #  self.db = db
-
     def logger_test(self):
         pass
 
     def get(self, listing_id: int):
         # Get apartment by listing_id
+        if not isinstance(listing_id, int):
+            return None
         sql = """
         SELECT * FROM listings WHERE id = %s
         """
@@ -20,8 +20,8 @@ class CRUDListing:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
 
-            logger.debug("Successfully get listing_id:", listing_id)
             if listing is None:
+                logger.debug(f"Listing not found")
                 return None
 
             return Listing(
@@ -49,10 +49,7 @@ class CRUDListing:
             return None
 
     def create(self, listing: Listing):
-        # Insert apartment object in database
-        # If apartment already exists, update it
 
-        logger.debug("Create listing for listing_id:", listing.listing_id)
         if self.get(listing.listing_id) is not None:
             self.update(listing)
             return listing
@@ -79,7 +76,7 @@ class CRUDListing:
             logger.error("Error while creating listing", e)
             return None
 
-        logger.debug("Successfully created listing_id:", listing.listing_id)
+        logger.debug(f"Successfully created listing_id:{listing.listing_id}")
         return listing
 
     def update(self, listing: Listing):
