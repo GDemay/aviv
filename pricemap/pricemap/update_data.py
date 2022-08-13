@@ -57,6 +57,7 @@ def get_items_from_listingapi(listings, geom):
     # init database
     database = Database()
     database.init_database()
+    # database.init_history_price_table()
 
     # Create empty Apartment object
 
