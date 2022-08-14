@@ -61,7 +61,6 @@ def update_listing(listing_id: int) -> Listing:
         logging.error("Listing not found")
         return "Not Found", HTTPStatus.NOT_FOUND
 
-    logger.debug(f"Update listing for listing_id: {listing_id}")
 
     data = request.get_json()
 
@@ -73,7 +72,7 @@ def update_listing(listing_id: int) -> Listing:
         # listing_history = crud_listing_history.create(
         #    listing_id=listing_id, price=data["price"]
         # )
-        # logger.error(f"Created listing history: {listing_history}")
+        # logger.error("Created listing history: {listing_history}")
 
     if "area" in data:
         listing.area = data["area"]
@@ -81,7 +80,6 @@ def update_listing(listing_id: int) -> Listing:
         listing.room_count = data["room_count"]
 
     listing.seen_at = datetime.now()
-    logger.debug(f" Listing: {listing}")
 
     listing = crud_listing.update(listing=listing)
     return [listing]

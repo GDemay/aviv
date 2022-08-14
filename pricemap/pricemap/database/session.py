@@ -12,13 +12,13 @@ class Database:
     def init_database(self):
         sql = """
         CREATE TABLE IF NOT EXISTS listings (
-            id INTEGER,
+            listing_id INTEGER,
             place_id INTEGER,
             price INTEGER,
             area INTEGER,
             room_count INTEGER,
             seen_at TIMESTAMP,
-            PRIMARY KEY (id)
+            PRIMARY KEY (listing_id)
         );
     """
         self.execute_sql(sql)
@@ -29,10 +29,10 @@ class Database:
 
         sql = """
       CREATE TABLE IF NOT EXISTS history_price (
-          id PRIMARY KEY,
-          listing_id INTEGER FOREIGN KEY REFERENCES listings(id),
+          id INTEGER PRIMARY KEY,
+          listing_id INTEGER,
           price INTEGER,
-          date TIMESTAMP NOT NULL
+          date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       );
       """
         self.execute_sql(sql)

@@ -5,6 +5,7 @@ import requests
 from pricemap.core.config import settings
 from pricemap.core.logger import logger
 from pricemap.crud.listing import CRUDListing
+from pricemap.crud.listing_history import CRUDListingHistory
 from pricemap.database.session import Database
 from pricemap.schemas.listing import Listing
 
@@ -47,10 +48,10 @@ def generate_listing_in_database(listings, geom: int, database: Database):
 
         # Check if listing_id is set
         if apartment.listing_id is None:
-            logger.debug("listing_id is not found, skip it")
             continue
 
         crud_listing = CRUDListing(database=database)
+        crud_listing_history = CRUDListingHistory(database=database)
 
         # If the apartment is already in the database, we update it
         # If not, we create it
@@ -58,6 +59,7 @@ def generate_listing_in_database(listings, geom: int, database: Database):
             crud_listing.create(apartment)
         else:
             crud_listing.update(apartment)
+        #crud_listing_history.create(apartment.listing_id, apartment.price)
 
 
 def set_listing_values(listing, geom):

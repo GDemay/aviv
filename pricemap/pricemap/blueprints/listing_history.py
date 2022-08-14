@@ -41,7 +41,7 @@ def create() -> ListingHistory:
     logger.debug("Check if all fields are in data")
     # Check if all fields are in data except history_id and listing_id
     if any(field not in data for field in ["price", "date"]):
-        logger.error(f"Missing fields in data: {data}")
+        #logger.error(f"Missing fields in data: {data}")
         # raise http.client.HTTPException("Missing fields in data")
         return "Bad Request", http.client.BAD_REQUEST
 

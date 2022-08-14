@@ -29,7 +29,6 @@ class CRUDListingHistory:
             self.database.db_cursor.execute(sql, (history_id,))
             history = self.database.db_cursor.fetchone()
 
-            logger.debug("Successfully get history_id:", history_id)
             if history is None:
                 return None
 
@@ -41,7 +40,6 @@ class CRUDListingHistory:
             )
 
         except Exception as e:
-            logger.error(f"Error while getting history_id:{history_id}", e)
             return None
 
     # Create a new history of the price of a listing
@@ -51,7 +49,6 @@ class CRUDListingHistory:
         _param_  price : The price of the listing
         _return_ : The history of the listing
         """
-        logger.debug("Create history for listing_id:", listing_id)
 
         # Add the new history of the price of the listing
         # Date is automatically added
@@ -68,15 +65,9 @@ class CRUDListingHistory:
             # get history_id
             self.database.db_cursor.execute(sql, (listing_id, price))
             self.database.db_connection.commit()
-            logger.debug(
-                "Successfully created history for listing_id:", listing_id
-            )
 
             return self.get(self.database.db_cursor.lastrowid)
         except Exception as e:
-            logger.error(
-                f"Error while creating history for listing_id:{listing_id}", e
-            )
             return None
 
     # Update the history of the price of a listing
@@ -85,7 +76,6 @@ class CRUDListingHistory:
         _param_ history : The history of the listing
         _return_ : The history of the listing
         """
-        logger.debug("Update history for history_id:", history.history_id)
         if self.get(history.history_id) is None:
             self.create(history)
             return history
@@ -100,12 +90,6 @@ class CRUDListingHistory:
                 sql, (history.price, history.date, history.history_id)
             )
             self.database.db_connection.commit()
-            logger.debug(
-                "Successfully updated history_id:", history.history_id
-            )
             return history
         except Exception as e:
-            logger.error(
-                f"Error while updating history_id:{history.history_id}", e
-            )
             return None
