@@ -59,7 +59,7 @@ def generate_listing_in_database(listings, geom: int, database: Database):
             crud_listing.create(apartment)
         else:
             crud_listing.update(apartment)
-        #crud_listing_history.create(apartment.listing_id, apartment.price)
+        # crud_listing_history.create(apartment.listing_id, apartment.price)
 
 
 def set_listing_values(listing, geom):

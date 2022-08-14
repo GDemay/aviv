@@ -61,7 +61,6 @@ def update_listing(listing_id: int) -> Listing:
         logging.error("Listing not found")
         return "Not Found", HTTPStatus.NOT_FOUND
 
-
     data = request.get_json()
 
     logger.debug(f"Data: {data}")
