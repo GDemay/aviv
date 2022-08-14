@@ -19,8 +19,8 @@ def get(history_id):
     Returns:
       ListingHistory : Return a json object with the listing history
     """
-    print("hello world")
-    return "Hello World"
+    crud_listing_history = CRUDListingHistory(database=Database())
+    return crud_listing_history.get(history_id=history_id).dict()
 
 
 # Create a listing history

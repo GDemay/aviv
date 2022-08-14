@@ -18,7 +18,7 @@ class Database:
             area INTEGER,
             room_count INTEGER,
             seen_at TIMESTAMP,
-            PRIMARY KEY (id, seen_at)
+            PRIMARY KEY (id)
         );
     """
         self.execute_sql(sql)

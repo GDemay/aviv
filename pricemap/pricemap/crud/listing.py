@@ -7,21 +7,27 @@ class CRUDListing:
     def __init__(self, database):
         self.database = database
 
-    def get(self, listing_id: int):
-        # Get apartment by listing_id
-        if not isinstance(listing_id, int):
-            return None
+    def get(self, listing_id: int) -> Listing:
+        """Get a listing from id
 
-        # Test
-        sql = """
-        SELECT * FROM listings WHERE id = %s
+        Args:
+            listing_id (int):  listing id
+
+        Returns:
+            _type_:  Listing
         """
+        # TODO Ca semble casser quelque chose, à voir
+        #  if not isinstance(listing_id, int):
+        #      return None
+        sql = """
+      SELECT * FROM listings WHERE id = %s
+      """
         try:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
 
             if listing is None:
-                logger.debug(f"Listing not found")
+                logger.debug("Listing not found")
                 return None
 
             return Listing(
@@ -38,6 +44,7 @@ class CRUDListing:
             return None
 
     def get_all(self):
+        # TODO Remove limit 100
         sql = """
         SELECT * FROM listings LIMIT 100
         """
@@ -49,10 +56,6 @@ class CRUDListing:
             return None
 
     def create(self, listing: Listing):
-
-        if self.get(listing.listing_id) is not None:
-            self.update(listing)
-            return listing
 
         sql = """
         INSERT INTO listings (id, place_id, price, area, room_count, seen_at)
@@ -76,11 +79,10 @@ class CRUDListing:
             logger.error("Error while creating listing", e)
             return None
 
-        return listing
+        logger.debug(f"Successfully created listing_id: {listing.listing_id}")
 
     def update(self, listing: Listing):
         # Update price and area of apartment in database
-        # TODO le seen_at a un problème
         sql = """
         UPDATE listings
         SET price = %s, area = %s, room_count = %s, place_id = %s, seen_at = NOW()

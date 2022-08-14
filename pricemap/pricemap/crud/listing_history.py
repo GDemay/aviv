@@ -45,40 +45,37 @@ class CRUDListingHistory:
             return None
 
     # Create a new history of the price of a listing
-    def create(self, history: ListingHistory):
-        """_summary_ : This function create a new history of the price of a listing
-        _param_ history : The history of the listing
+    def create(self, listing_id: int, price: int) -> ListingHistory:
+        """This function create a new history of the price of a listing
+        _param_  listing_id : The id of the listing
+        _param_  price : The price of the listing
         _return_ : The history of the listing
         """
-        logger.debug("Create history for history_id:", history.history_id)
-        if self.get(history.history_id) is not None:
-            logging.debug(
-                f"History already exists for history_id:{history.history_id}"
-            )
-            return history
+        logger.debug("Create history for listing_id:", listing_id)
+
+        # Add the new history of the price of the listing
+        # Date is automatically added
+        # history_id is a new id
+        # listing_id is the id of the listing
+        # price is the price of the listing
+        # date is the date of now
 
         sql = """
-    INSERT INTO history_price (id, listing_id, price, date)
-    VALUES (%s, %s, %s, %s)
-    """
+        INSERT INTO history_price (listing_id, price)
+        VALUES (%s, %s)
+        """
         try:
-            self.database.db_cursor.execute(
-                sql,
-                (
-                    history.history_id,
-                    history.listing_id,
-                    history.price,
-                    history.date,
-                ),
-            )
+            # get history_id
+            self.database.db_cursor.execute(sql, (listing_id, price))
             self.database.db_connection.commit()
             logger.debug(
-                "Successfully created history_id:", history.history_id
+                "Successfully created history for listing_id:", listing_id
             )
-            return history
+
+            return self.get(self.database.db_cursor.lastrowid)
         except Exception as e:
             logger.error(
-                f"Error while creating history_id:{history.history_id}", e
+                f"Error while creating history for listing_id:{listing_id}", e
             )
             return None
 
