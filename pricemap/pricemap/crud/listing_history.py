@@ -1,6 +1,5 @@
 """ This is the CRUD for ListingHistory (create, read, update, delete) """
 
-import logging
 
 from pricemap.core.logger import logger
 from pricemap.schemas.listing_history import ListingHistory
@@ -57,17 +56,56 @@ class CRUDListingHistory:
         # price is the price of the listing
         # date is the date of now
 
+        # Get the last history_price related to listing_id
+        
+        logger.debug("Creating a new listing_history!")
+
+        if not listing_id:
+            logger.debug("No listing_id")
+            return None
         sql = """
-        INSERT INTO history_price (listing_id, price)
-        VALUES (%s, %s)
+        SELECT price FROM history_price WHERE listing_id = %s ORDER BY date DESC limit 1;
         """
+
+        try:
+            self.database.db_cursor.execute(sql, (listing_id,))
+            old_price = self.database.db_cursor.fetchone()
+            # If no history, then price is the price of the listing
+            # If there is a history, then price is the price of the last history
+            
+            if old_price is not None:
+                old_price = old_price[0]
+                if old_price == price:
+                    logger.debug("Price is the same")
+                    return None
+                # You can add a new history of the price of the listing
+
+            
+            logger.info("Let's continue!")
+            logger.info(f"old_price: {old_price} price: {price}" )
+
+        except Exception as e:
+            # TODO Improve exception handling that's not good to just return None
+            # Exception error should be more
+            logger.debug("Error getting old_price")
+            logger.debug(e)
+            self.database.db.rollback()
+            return None
+
+        logger.info("Inserting new history")
+        sql = """ INSERT INTO history_price (listing_id, price) VALUES  (%s, %s) RETURNING id """
         try:
             # get history_id
             self.database.db_cursor.execute(sql, (listing_id, price))
-            self.database.db_connection.commit()
+            self.database.db.commit()
+            
+            history = self.get(self.database.db_cursor.lastrowid)
+            logger.debug(f"history: {history}")
 
-            return self.get(self.database.db_cursor.lastrowid)
+            # return self.get(self.database.db_cursor.lastrowid)
         except Exception as e:
+            self.database.db.rollback()
+            logger.debug(f"Error inserting new history: {e}")
             return None
 
     # Update the history of the price of a listing
@@ -89,7 +127,8 @@ class CRUDListingHistory:
             self.database.db_cursor.execute(
                 sql, (history.price, history.date, history.history_id)
             )
-            self.database.db_connection.commit()
+            self.database.db.commit()
             return history
         except Exception as e:
+            self.database.db.rollback()
             return None

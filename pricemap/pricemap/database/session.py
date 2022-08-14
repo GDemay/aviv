@@ -29,10 +29,11 @@ class Database:
 
         sql = """
       CREATE TABLE IF NOT EXISTS history_price (
-          id INTEGER PRIMARY KEY,
+          id SERIAL,
           listing_id INTEGER,
           price INTEGER,
-          date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+          date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          PRIMARY KEY (id)
       );
       """
         self.execute_sql(sql)
