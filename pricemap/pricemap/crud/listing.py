@@ -79,7 +79,6 @@ class CRUDListing:
             logger.error("Error while creating listing", e)
             return None
 
-
     def update(self, listing: Listing):
         # Update price and area of apartment in database
         sql = """
@@ -103,7 +102,6 @@ class CRUDListing:
         except Exception as e:
             self.database.db.rollback()
             return None
-
 
         return listing
 
