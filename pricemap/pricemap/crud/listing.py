@@ -60,7 +60,6 @@ class CRUDListing:
         VALUES (%s, %s, %s, %s, %s, %s)
         """
 
-        logger.info("Create listing to database for ", listing.listing_id)
         try:
             self.database.db_cursor.execute(
                 sql,
