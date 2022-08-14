@@ -57,7 +57,7 @@ class CRUDListingHistory:
         # date is the date of now
 
         # Get the last history_price related to listing_id
-        
+
         logger.debug("Creating a new listing_history!")
 
         if not listing_id:
@@ -72,7 +72,7 @@ class CRUDListingHistory:
             old_price = self.database.db_cursor.fetchone()
             # If no history, then price is the price of the listing
             # If there is a history, then price is the price of the last history
-            
+
             if old_price is not None:
                 old_price = old_price[0]
                 if old_price == price:
@@ -80,9 +80,8 @@ class CRUDListingHistory:
                     return None
                 # You can add a new history of the price of the listing
 
-            
             logger.info("Let's continue!")
-            logger.info(f"old_price: {old_price} price: {price}" )
+            logger.info(f"old_price: {old_price} price: {price}")
 
         except Exception as e:
             # TODO Improve exception handling that's not good to just return None
@@ -98,7 +97,7 @@ class CRUDListingHistory:
             # get history_id
             self.database.db_cursor.execute(sql, (listing_id, price))
             self.database.db.commit()
-            
+
             history = self.get(self.database.db_cursor.lastrowid)
             logger.debug(f"history: {history}")
 
