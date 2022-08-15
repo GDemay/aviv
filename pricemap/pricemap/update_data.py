@@ -1,13 +1,11 @@
-from datetime import datetime
-
 import requests
 
 from pricemap.core.config import settings
 from pricemap.core.logger import logger
+from pricemap.core.parsing_listing import Parsing_Listing
 from pricemap.crud.listing import CRUDListing
 from pricemap.crud.listing_history import CRUDListingHistory
 from pricemap.database.session import Database
-from pricemap.schemas.listing import Listing
 
 
 def update():
@@ -62,7 +60,9 @@ def generate_listing_in_database(
 
     for response_listing in response_listings:
         # Set all values for listing object (price_id, place_id, price, area, room_count)
-        listing = set_listing_values(response_listing, geom)
+        listing = Parsing_Listing(
+            response_listing=response_listing, geom=geom
+        ).extract()
 
         # Check if listing_id is set
         if listing.listing_id is None:
@@ -80,54 +80,3 @@ def generate_listing_in_database(
             logger.debug("Update a listing")
             crud_listing.update(listing)
         crud_listing_history.create(listing.listing_id, listing.price)
-
-
-def set_listing_values(response_listing: dict, geom: int) -> Listing:
-    """Set all values for listing object (price_id, place_id, price, area, room_count)
-
-    Args:
-        listing (_type_): Listing object
-        geom (_type_):  place id
-
-    Returns:
-        _type_: Listing object
-    """
-
-    listing = Listing()
-    listing.listing_id = response_listing["listing_id"]
-    listing.place_id = geom
-    try:
-        listing.room_count = (
-            1
-            if "Studio" in response_listing["title"]
-            else int(
-                "".join(
-                    [
-                        s
-                        for s in response_listing["title"].split("pièces")[0]
-                        if s.isdigit()
-                    ]
-                )
-            )
-        )
-    except:
-        listing.room_count = 0
-
-    try:
-        listing.price = int(
-            "".join([s for s in response_listing["price"] if s.isdigit()])
-        )
-    except:
-        listing.price = 0
-
-    try:
-        listing.area = int(
-            response_listing["title"]
-            .split("-")[1]
-            .replace(" ", "")
-            .replace("\u00a0m\u00b2", "")
-        )
-    except:
-        listing.area = 0
-
-    return listing
