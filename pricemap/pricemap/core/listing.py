@@ -1,6 +1,6 @@
 import re
 
-from pricemap.models.listing import Listing
+from pricemap.schemas.listing import Listing
 
 
 # Create an appartment object from listing
