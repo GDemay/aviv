@@ -35,10 +35,12 @@ class CRUDListing:
                 price=listing[2],
                 area=listing[3],
                 room_count=listing[4],
-                seen_at=listing[5],
+                creation_date=listing[5],
+                deleted_at=listing[6],
             )
 
         except Exception as e:
+            logger.error("Error while getting listing", e)
             return None
 
     def get_all(self):
@@ -56,8 +58,8 @@ class CRUDListing:
     def create(self, listing: Listing):
 
         sql = """
-        INSERT INTO listings (listing_id, place_id, price, area, room_count, seen_at)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO listings (listing_id, place_id, price, area, room_count)
+        VALUES (%s, %s, %s, %s, %s)
         """
 
         try:
@@ -69,7 +71,6 @@ class CRUDListing:
                     listing.price,
                     listing.area,
                     listing.room_count,
-                    listing.seen_at,
                 ),
             )
             self.database.db.commit()
@@ -82,7 +83,7 @@ class CRUDListing:
         # Update price and area of apartment in database
         sql = """
         UPDATE listings
-        SET price = %s, area = %s, room_count = %s, place_id = %s, seen_at = NOW()
+        SET price = %s, area = %s, room_count = %s, place_id = %s
         WHERE listing_id = %s 
         """
 
@@ -100,9 +101,10 @@ class CRUDListing:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
+            logger.error("Error while updating listing", e)
             return None
 
-        return listing
+        return listing.dict()
 
     def delete(self, listing_id: int):
         """Delete a listing from id

@@ -12,9 +12,7 @@ class ListingHistory(BaseModel):
         BaseModel is the base class for all models
     """
 
-    history_id: Optional[int] = None
-    listing_id: Optional[
-        int
-    ] = None  # Foreign key linked to listing_id in Listing
-    price: Optional[int] = None
-    date: Optional[datetime] = None
+    history_id: int = None
+    listing_id: int = None  # Foreign key linked to listing_id in Listing
+    price: int = None
+    date: datetime = None

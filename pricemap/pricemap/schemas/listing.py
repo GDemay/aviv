@@ -14,11 +14,10 @@ class Listing(BaseModel):
         BaseModel is the base class for all models
     """
 
-    listing_id: Optional[int] = None  # Primary key
-    place_id: Optional[int] = None  # Id of the place geom
-    price: Optional[int] = None  # Price of the listing
-    area: Optional[int] = None  # Area of the listing
-    room_count: Optional[int] = None  # Number of rooms in the listing
-    seen_at: Optional[
-        datetime
-    ] = None  # Date of the last update of the listing
+    listing_id: int = None  # Primary key
+    place_id: int = None  # Id of the place geom
+    price: int = None  # Price of the listing
+    area: int = None  # Area of the listing
+    room_count: int = None  # Number of rooms in the listing
+    creation_date: datetime = None  # Date of creation of the listing
+    deleted_at: datetime = None  # Date of deletion of the listing

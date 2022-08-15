@@ -81,8 +81,6 @@ def update_listing(listing_id: int) -> Listing:
     if "room_count" in data:
         listing.room_count = data["room_count"]
 
-    listing.seen_at = datetime.now()
-
     listing = crud_listing.update(listing=listing)
     return listing.dict()
 
@@ -106,3 +104,11 @@ def delete_listing_table():
     crud_listing = CRUDListing(database=Database())
     crud_listing.delete()
     return "Deleted table"
+
+
+# Drop table listing
+@listing_blueprint.route("/drop", methods=["DELETE"])
+def drop_listing_table():
+    """Drop the listing table from the database."""
+    db = Database()
+    return db.delete_table()

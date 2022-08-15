@@ -15,10 +15,13 @@ def update():
 
     # init database
     database = Database()
-    database.init_database()
+    database.init_listing_table()
     database.init_history_price_table()
 
     for geom in settings.GEOMS_IDS:
+        # TODO REMOVE IT!! ONLY FOR DEBUG
+        if geom != 32684:
+            break
         page = 0
 
         # Looping until we have a HTTP code different than 200
@@ -43,7 +46,7 @@ def generate_listing_in_database(listings, geom: int, database: Database):
     # Create empty Apartment object
 
     for listing in listings:
-        # Set all values for apartment object (price_id, place_id, price, area, room_count, seen_at)
+        # Set all values for apartment object (price_id, place_id, price, area, room_count)
         apartment = set_listing_values(listing, geom)
 
         # Check if listing_id is set
@@ -56,8 +59,10 @@ def generate_listing_in_database(listings, geom: int, database: Database):
         # If the apartment is already in the database, we update it
         # If not, we create it
         if crud_listing.get(apartment.listing_id) is None:
+            logger.debug("Create a listing")
             crud_listing.create(apartment)
         else:
+            logger.debug("Update a listing")
             crud_listing.update(apartment)
         crud_listing_history.create(apartment.listing_id, apartment.price)
 
@@ -101,5 +106,4 @@ def set_listing_values(listing, geom):
     except:
         apartment.area = 0
 
-    apartment.seen_at = datetime.now()
     return apartment
