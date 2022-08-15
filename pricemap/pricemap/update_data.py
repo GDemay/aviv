@@ -11,6 +11,11 @@ from pricemap.schemas.listing import Listing
 
 
 def update():
+    """update listings in database
+
+    Returns:
+        return a success message
+    """
     # Looping over all places
 
     # init database
@@ -29,12 +34,14 @@ def update():
             page += 1
             url = f"http://listingapi:5000/listings/{str(geom)}?page={page}"
             # Making the request to get the listings
-            response = requests.get(url)
+            response_listings = requests.get(url)
 
             # If the HTTP code is different than 200, we break the loop
-            if response.status_code == 200:
+            if response_listings.status_code == 200:
                 generate_listing_in_database(
-                    listings=response.json(), geom=geom, database=database
+                    response_listings=response_listings.json(),
+                    geom=geom,
+                    database=database,
                 )
             else:
                 break
@@ -42,69 +49,85 @@ def update():
 
 
 # TODO Better HTTP error handling
-def generate_listing_in_database(listings, geom: int, database: Database):
+def generate_listing_in_database(
+    response_listings: dict, geom: int, database: Database
+):
+    """Generate listing in database
 
-    # Create empty Apartment object
+    Args:
+        response_listings dict: List of listings from request
+        geom (int): place id
+        database (Database):  Database object
+    """
 
-    for listing in listings:
-        # Set all values for apartment object (price_id, place_id, price, area, room_count)
-        apartment = set_listing_values(listing, geom)
+    for response_listing in response_listings:
+        # Set all values for listing object (price_id, place_id, price, area, room_count)
+        listing = set_listing_values(response_listing, geom)
 
         # Check if listing_id is set
-        if apartment.listing_id is None:
+        if listing.listing_id is None:
             continue
 
         crud_listing = CRUDListing(database=database)
         crud_listing_history = CRUDListingHistory(database=database)
 
-        # If the apartment is already in the database, we update it
+        # If the listing is already in the database, we update it
         # If not, we create it
-        if crud_listing.get(apartment.listing_id) is None:
+        if crud_listing.get(listing.listing_id) is None:
             logger.debug("Create a listing")
-            crud_listing.create(apartment)
+            crud_listing.create(listing)
         else:
             logger.debug("Update a listing")
-            crud_listing.update(apartment)
-        crud_listing_history.create(apartment.listing_id, apartment.price)
+            crud_listing.update(listing)
+        crud_listing_history.create(listing.listing_id, listing.price)
 
 
-def set_listing_values(listing, geom):
-    # Create empty Apartment object
-    apartment = Listing()
-    apartment.listing_id = listing["listing_id"]
-    apartment.place_id = geom
+def set_listing_values(response_listing: dict, geom: int) -> Listing:
+    """Set all values for listing object (price_id, place_id, price, area, room_count)
+
+    Args:
+        listing (_type_): Listing object
+        geom (_type_):  place id
+
+    Returns:
+        _type_: Listing object
+    """
+
+    listing = Listing()
+    listing.listing_id = response_listing["listing_id"]
+    listing.place_id = geom
     try:
-        apartment.room_count = (
+        listing.room_count = (
             1
-            if "Studio" in listing["title"]
+            if "Studio" in response_listing["title"]
             else int(
                 "".join(
                     [
                         s
-                        for s in listing["title"].split("pièces")[0]
+                        for s in response_listing["title"].split("pièces")[0]
                         if s.isdigit()
                     ]
                 )
             )
         )
     except:
-        apartment.room_count = 0
+        listing.room_count = 0
 
     try:
-        apartment.price = int(
-            "".join([s for s in listing["price"] if s.isdigit()])
+        listing.price = int(
+            "".join([s for s in response_listing["price"] if s.isdigit()])
         )
     except:
-        apartment.price = 0
+        listing.price = 0
 
     try:
-        apartment.area = int(
-            listing["title"]
+        listing.area = int(
+            response_listing["title"]
             .split("-")[1]
             .replace(" ", "")
             .replace("\u00a0m\u00b2", "")
         )
     except:
-        apartment.area = 0
+        listing.area = 0
 
-    return apartment
+    return listing

@@ -80,7 +80,7 @@ class CRUDListing:
             return None
 
     def update(self, listing: Listing):
-        # Update price and area of apartment in database
+        # Update price and area of listing in database
         sql = """
         UPDATE listings
         SET price = %s, area = %s, room_count = %s, place_id = %s
