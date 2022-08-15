@@ -1,3 +1,4 @@
+""" This is the config for the app """
 from pydantic import BaseSettings
 
 
@@ -8,6 +9,8 @@ class Settings(BaseSettings):
     """
 
     # Create a data structure of GEOMS_ID and Paris Suburbs
+    # TODO : Add the geoms_id and suburbs to the settings file
+    # To remove? Not sure that's revelant anymore
     GEOMS_ID_PLUS_TARD = {
         "Paris 1": 32682,
         "Paris 2": 32683,
