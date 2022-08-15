@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import requests
 
 from pricemap.core.config import settings
@@ -8,7 +6,6 @@ from pricemap.core.parsing_listing import Parsing_Listing
 from pricemap.crud.listing import CRUDListing
 from pricemap.crud.listing_history import CRUDListingHistory
 from pricemap.database.session import Database
-from pricemap.schemas.listing import Listing
 
 
 def update():
