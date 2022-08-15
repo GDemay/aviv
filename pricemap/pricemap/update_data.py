@@ -11,11 +11,11 @@ from pricemap.schemas.listing import Listing
 
 
 def update():
-    """ update listings in database
+    """update listings in database
 
-  Returns:
-      return a success message
-  """
+    Returns:
+        return a success message
+    """
     # Looping over all places
 
     # init database
