@@ -13,7 +13,7 @@ listing_history_blueprint = Blueprint("listing_history_blueprint", __name__)
 
 # Listing an listing id
 @listing_history_blueprint.route("/<int:history_id>", methods=["GET"])
-def get(history_id):
+def get(history_id: int) -> ListingHistory:
     """Get a Listing History from the database.
 
     Returns:

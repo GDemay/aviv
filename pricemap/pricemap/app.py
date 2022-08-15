@@ -41,5 +41,4 @@ def index():
 @app.route("/update_data")
 def update_data():
     """Update the data."""
-    update()
-    return "", 200
+    return update()

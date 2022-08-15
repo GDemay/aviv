@@ -38,6 +38,7 @@ def update():
                 )
             else:
                 break
+    return "Data updated", 200
 
 
 # TODO Better HTTP error handling

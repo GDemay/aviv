@@ -16,7 +16,7 @@ listing_blueprint = Blueprint("listing_blueprint", __name__)
 
 # Listing an listing id
 @listing_blueprint.route("/<int:listing_id>", methods=["GET"])
-def get_listing(listing_id):
+def get_listing(listing_id: int) -> Listing:
     """Get a Listing from the database.
 
     Returns:
@@ -87,8 +87,10 @@ def update_listing(listing_id: int) -> Listing:
 
 # Delete a listing
 @listing_blueprint.route("/<int:listing_id>", methods=["DELETE"])
-def delete_listing(listing_id):
-    """Delete a listing from the database."""
+def delete_listing(listing_id: int) -> Listing:
+    """Delete a listing from the database.
+    params: listing_id (int): listing id
+    """
     crud_listing = CRUDListing(database=Database())
     return (
         ("Listing id deleted", 200)
@@ -99,7 +101,7 @@ def delete_listing(listing_id):
 
 # Delete listing table
 @listing_blueprint.route("/", methods=["DELETE"])
-def delete_listing_table():
+def delete_listing_table() -> str:
     """Delete the listing table from the database."""
     crud_listing = CRUDListing(database=Database())
     crud_listing.delete()
@@ -108,7 +110,7 @@ def delete_listing_table():
 
 # Drop table listing
 @listing_blueprint.route("/drop", methods=["DELETE"])
-def drop_listing_table():
+def drop_listing_table() -> str:
     """Drop the listing table from the database."""
     db = Database()
     return db.delete_table()
