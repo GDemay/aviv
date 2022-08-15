@@ -1,3 +1,4 @@
+""" This is the CRUD for Listing (create, read, update, delete) """
 from pricemap.core.logger import logger
 from pricemap.schemas.listing import Listing
 
@@ -6,22 +7,26 @@ class CRUDListing:
     def __init__(self, database):
         self.database = database
 
-    def logger_test(self):
-        pass
+    def get(self, listing_id: int) -> Listing:
+        """Get a listing from id
 
-    def get(self, listing_id: int):
-        # Get apartment by listing_id
-        if not isinstance(listing_id, int):
-            return None
-        sql = """
-        SELECT * FROM listings WHERE id = %s
+        Args:
+            listing_id (int):  listing id
+
+        Returns:
+            _type_:  Listing
         """
+        # TODO Ca semble casser quelque chose, à voir
+        #  if not isinstance(listing_id, int):
+        #      return None
+        sql = """
+      SELECT * FROM listings WHERE listing_id = %s
+      """
         try:
             self.database.db_cursor.execute(sql, (listing_id,))
             listing = self.database.db_cursor.fetchone()
 
             if listing is None:
-                logger.debug(f"Listing not found")
                 return None
 
             return Listing(
@@ -30,14 +35,16 @@ class CRUDListing:
                 price=listing[2],
                 area=listing[3],
                 room_count=listing[4],
-                seen_at=listing[5],
+                creation_date=listing[5],
+                deleted_at=listing[6],
             )
 
         except Exception as e:
-            logger.error(f"Error while getting listing_id:{listing_id}", e)
+            logger.error("Error while getting listing", e)
             return None
 
     def get_all(self):
+        # TODO Remove limit 100
         sql = """
         SELECT * FROM listings LIMIT 100
         """
@@ -50,14 +57,11 @@ class CRUDListing:
 
     def create(self, listing: Listing):
 
-        if self.get(listing.listing_id) is not None:
-            self.update(listing)
-            return listing
-
         sql = """
-        INSERT INTO listings (id, place_id, price, area, room_count, seen_at)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        INSERT INTO listings (listing_id, place_id, price, area, room_count)
+        VALUES (%s, %s, %s, %s, %s)
         """
+
         try:
             self.database.db_cursor.execute(
                 sql,
@@ -67,7 +71,6 @@ class CRUDListing:
                     listing.price,
                     listing.area,
                     listing.room_count,
-                    listing.seen_at,
                 ),
             )
             self.database.db.commit()
@@ -76,16 +79,12 @@ class CRUDListing:
             logger.error("Error while creating listing", e)
             return None
 
-        logger.debug(f"Successfully created listing_id:{listing.listing_id}")
-        return listing
-
     def update(self, listing: Listing):
         # Update price and area of apartment in database
-        # TODO le seen_at a un problème
         sql = """
         UPDATE listings
-        SET price = %s, area = %s, room_count = %s, place_id = %s, seen_at = NOW()
-        WHERE id = %s 
+        SET price = %s, area = %s, room_count = %s, place_id = %s
+        WHERE listing_id = %s 
         """
 
         try:
@@ -102,11 +101,10 @@ class CRUDListing:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            logger.debug("Error while updating listing", e)
+            logger.error("Error while updating listing", e)
             return None
 
-        logger.debug("Successfully updated listing_id:", listing.listing_id)
-        return listing
+        return listing.dict()
 
     def delete(self, listing_id: int):
         """Delete a listing from id
@@ -116,7 +114,7 @@ class CRUDListing:
         """
 
         sql = """
-      DELETE FROM listings WHERE id = %s
+      DELETE FROM listings WHERE listing_id = %s
       """
         try:
             # get listing
@@ -127,10 +125,8 @@ class CRUDListing:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            logger.error("Error while deleting listing", e)
             return None
 
-        logger.debug("Successfully deleted listing_id:", listing_id)
         return listing_id
 
     def delete_table_listing(self):
@@ -143,8 +139,6 @@ class CRUDListing:
             self.database.db.commit()
         except Exception as e:
             self.database.db.rollback()
-            logger.error("Error while deleting table listing", e)
             return None
 
-        logger.debug("Successfully deleted table listing")
         return None

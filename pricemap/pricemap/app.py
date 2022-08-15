@@ -3,12 +3,16 @@ from flask import Flask, g, render_template
 
 from pricemap.blueprints.api import api
 from pricemap.blueprints.listing import listing_blueprint
+from pricemap.blueprints.listing_history import listing_history_blueprint
 from pricemap.update_data import update
 
 app = Flask(__name__)
 app.config.from_object("settings")
 app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(listing_blueprint, url_prefix="/listing")
+app.register_blueprint(
+    listing_history_blueprint, url_prefix="/listing_history_blueprint"
+)
 
 
 @app.before_request

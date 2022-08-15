@@ -5,8 +5,66 @@ import requests
 from pricemap.core.config import settings
 from pricemap.core.logger import logger
 from pricemap.crud.listing import CRUDListing
+from pricemap.crud.listing_history import CRUDListingHistory
 from pricemap.database.session import Database
 from pricemap.schemas.listing import Listing
+
+
+def update():
+    # Looping over all places
+
+    # init database
+    database = Database()
+    database.init_listing_table()
+    database.init_history_price_table()
+
+    for geom in settings.GEOMS_IDS:
+        # TODO REMOVE IT!! ONLY FOR DEBUG
+        if geom != 32684:
+            break
+        page = 0
+
+        # Looping until we have a HTTP code different than 200
+        while True:
+            page += 1
+            url = f"http://listingapi:5000/listings/{str(geom)}?page={page}"
+            # Making the request to get the listings
+            response = requests.get(url)
+
+            # If the HTTP code is different than 200, we break the loop
+            if response.status_code == 200:
+                generate_listing_in_database(
+                    listings=response.json(), geom=geom, database=database
+                )
+            else:
+                break
+
+
+# TODO Better HTTP error handling
+def generate_listing_in_database(listings, geom: int, database: Database):
+
+    # Create empty Apartment object
+
+    for listing in listings:
+        # Set all values for apartment object (price_id, place_id, price, area, room_count)
+        apartment = set_listing_values(listing, geom)
+
+        # Check if listing_id is set
+        if apartment.listing_id is None:
+            continue
+
+        crud_listing = CRUDListing(database=database)
+        crud_listing_history = CRUDListingHistory(database=database)
+
+        # If the apartment is already in the database, we update it
+        # If not, we create it
+        if crud_listing.get(apartment.listing_id) is None:
+            logger.debug("Create a listing")
+            crud_listing.create(apartment)
+        else:
+            logger.debug("Update a listing")
+            crud_listing.update(apartment)
+        crud_listing_history.create(apartment.listing_id, apartment.price)
 
 
 def set_listing_values(listing, geom):
@@ -48,43 +106,4 @@ def set_listing_values(listing, geom):
     except:
         apartment.area = 0
 
-    apartment.seen_at = datetime.now()
     return apartment
-
-
-# TODO Better HTTP error handling
-def get_items_from_listingapi(listings, geom):
-    # init database
-    database = Database()
-    database.init_database()
-
-    # Create empty Apartment object
-
-    for listing in listings:
-        # Set all values for apartment object (price_id, place_id, price, area, room_count, seen_at)
-        apartment = set_listing_values(listing, geom)
-
-        # From CRUDApartment, we call the create function to insert the apartment object in the database
-        crud_apartment = CRUDListing(database=database)
-        if not crud_apartment.create(listing=apartment):
-            # TODO Not the best implement of error handling
-            logger.error("Error: apartment not created")
-
-
-def update():
-    # Looping over all places
-    for geom in settings.GEOMS_IDS:
-        page = 0
-
-        # Looping until we have a HTTP code different than 200
-        while True:
-            page += 1
-            url = f"http://listingapi:5000/listings/{str(geom)}?page={page}"
-            # Making the request to get the listings
-            response = requests.get(url)
-
-            # If the HTTP code is different than 200, we break the loop
-            if response.status_code == 200:
-                get_items_from_listingapi(listings=response.json(), geom=geom)
-            else:
-                break
