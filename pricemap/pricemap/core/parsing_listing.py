@@ -5,7 +5,8 @@ from pricemap.schemas.listing import Listing
 
 
 class ParsingListing:
-    """ This class is used for parsing the listing object from the API response"""
+    """This class is used for parsing the listing object from the API response"""
+
     def __init__(self, response_listing: dict, geom: int):
         self.response_listing = response_listing
         self.listing = Listing()
