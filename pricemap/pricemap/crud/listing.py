@@ -142,3 +142,23 @@ class CRUDListing:
             return None
 
         return None
+
+    def get_average_price_by_place_id(self, place_id: int):
+        """Get average price by place id"""
+
+        # Remove if area or price is equal to 0
+        sql = """
+        SELECT AVG(price), AVG(area) FROM listings WHERE place_id = %s AND area != 0 AND price != 0
+        """
+
+        try:
+            self.database.db_cursor.execute(sql, (place_id,))
+            average = self.database.db_cursor.fetchone()
+            logger.info("Average price is good!", average)
+            # transform with only one decimal
+            result = average[0] / average[1] if average[1] != 0 else 0
+            return {"average": round(result, 1)}
+
+        except Exception as e:
+            logger.error("Error while getting average price by place id", e)
+            return {"average": 0}

@@ -8,30 +8,51 @@ class Settings(BaseSettings):
         BaseSettings (_type_): _description_ - The base settings class.
     """
 
-    # Create a data structure of GEOMS_ID and Paris Suburbs
-    # TODO : Add the geoms_id and suburbs to the settings file
-    # To remove? Not sure that's revelant anymore
-    GEOMS_ID_PLUS_TARD = {
-        "Paris 1": 32682,
-        "Paris 2": 32683,
-        "Paris 3": 32684,
-        "Paris 4": 32685,
-        "Paris 5": 32686,
-        "Paris 6": 32687,
-        "Paris 7": 32688,
-        "Paris 8": 32689,
-        "Paris 9": 32690,
-        "Paris 10": 32691,
-        "Paris 11": 32692,
-        "Paris 12": 32693,
-        "Paris 13": 32694,
-        "Paris 14": 32695,
-        "Paris 15": 32696,
-        "Paris 16": 32697,
-        "Paris 17": 32698,
-        "Paris 18": 32699,
-        "Paris 19": 32700,
-        "Paris 20": 32701,
+    DISTRICT_GEOMS = {
+        "75101": 32682,
+        "75102": 32683,
+        "75103": 32684,
+        "75104": 32685,
+        "75105": 32686,
+        "75106": 32687,
+        "75107": 32688,
+        "75108": 32689,
+        "75109": 32690,
+        "75110": 32691,
+        "75111": 32692,
+        "75112": 32693,
+        "75113": 32694,
+        "75114": 32695,
+        "75115": 32696,
+        "75116": 32697,
+        "75117": 32698,
+        "75118": 32699,
+        "75119": 32700,
+        "75120": 32701,
+    }
+
+    # Create a new dict that inverse the geom_id and the geom_name
+    GEOMS_DISTRICT = {
+        32682: "75101",
+        32683: "75102",
+        32684: "75103",
+        32685: "75104",
+        32686: "75105",
+        32687: "75106",
+        32688: "75107",
+        32689: "75108",
+        32690: "75109",
+        32691: "751010",
+        32692: "751011",
+        32693: "751012",
+        32694: "751013",
+        32695: "751014",
+        32696: "751015",
+        32697: "751016",
+        32698: "751017",
+        32699: "751018",
+        32700: "751019",
+        32701: "751020",
     }
 
     GEOMS_IDS = [

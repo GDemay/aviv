@@ -114,3 +114,13 @@ def drop_listing_table() -> str:
     """Drop the listing table from the database."""
     db = Database()
     return db.delete_table()
+
+
+# Get the average price by m² for a given place_id
+@listing_blueprint.route("/average/<int:place_id>", methods=["GET"])
+def get_average_price_by_place_id(place_id: int) -> Listing:
+    """Get the average price by m² for a given place_id.
+    params: place_id (int): place id
+    """
+    crud_listing = CRUDListing(database=Database())
+    return crud_listing.get_average_price_by_place_id(place_id=place_id)

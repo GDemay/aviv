@@ -24,9 +24,6 @@ def update() -> None:
 
     # Loop over all places
     for geom in settings.GEOMS_IDS:
-        # TODO REMOVE IT!! ONLY FOR DEBUG
-        if geom != 32684:
-            break
         page = 0
 
         # Looping until we have a HTTP code different than 200
