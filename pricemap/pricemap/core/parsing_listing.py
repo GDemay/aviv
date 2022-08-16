@@ -1,9 +1,12 @@
+""" This is Parse Listing function that parses the data from the API and insert it in the database."""
 import logging
 
 from pricemap.schemas.listing import Listing
 
 
-class Parsing_Listing:
+class ParsingListing:
+    """This class is used for parsing the listing object from the API response"""
+
     def __init__(self, response_listing: dict, geom: int):
         self.response_listing = response_listing
         self.listing = Listing()

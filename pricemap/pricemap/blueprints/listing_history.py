@@ -1,6 +1,5 @@
 """ This is the endpoints for ListingHistory """
 import http.client
-from typing import List
 
 from flask import Blueprint, request
 
