@@ -68,10 +68,9 @@ def update_listing(listing_id: int) -> Listing:
         listing.price = data["price"]
         # We want to track the price history so we add a new entry in the history table
         crud_listing_history = CRUDListingHistory(database=Database())
-        listing_history = crud_listing_history.create(
+        if listing_history := crud_listing_history.create(
             listing_id=listing_id, price=data["price"]
-        )
-        if listing_history:
+        ):
             logger.debug(f"Listing history: {listing_history.dict()}")
         else:
             logger.error("Could not create listing history")
