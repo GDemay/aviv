@@ -1,5 +1,6 @@
 """ This is Parse Listing function that parses the data from the API and insert it in the database."""
 import logging
+import re
 
 from pricemap.schemas.listing import Listing
 
@@ -36,20 +37,21 @@ class ParsingListing:
         """
 
         room_count = 0
+        if re.search(r"Studio", self.response_listing["title"]):
+            # A studio has only one room
+            return 1
+
+        room_count = 0
         try:
-            room_count = (
-                1
-                if "Studio" in self.response_listing["title"]
-                else int(
-                    "".join(
-                        [
-                            s
-                            for s in self.response_listing["title"].split(
-                                "pièces"
-                            )[0]
-                            if s.isdigit()
-                        ]
-                    )
+            room_count = int(
+                "".join(
+                    [
+                        s
+                        for s in self.response_listing["title"].split(
+                            "pièces"
+                        )[0]
+                        if s.isdigit()
+                    ]
                 )
             )
         except Exception as e:
