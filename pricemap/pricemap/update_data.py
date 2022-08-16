@@ -1,14 +1,15 @@
+""" This is the update function that updates the data in the database."""
 import requests
 
 from pricemap.core.config import settings
 from pricemap.core.logger import logger
-from pricemap.core.parsing_listing import Parsing_Listing
+from pricemap.core.parsing_listing import ParsingListing
 from pricemap.crud.listing import CRUDListing
 from pricemap.crud.listing_history import CRUDListingHistory
 from pricemap.database.session import Database
 
 
-def update():
+def update() -> None:
     """update listings in database
 
     Returns:
@@ -16,11 +17,12 @@ def update():
     """
     # Looping over all places
 
-    # init database
+    # init database and create listings and history_price table if not exists
     database = Database()
     database.init_listing_table()
     database.init_history_price_table()
 
+    # Loop over all places
     for geom in settings.GEOMS_IDS:
         # TODO REMOVE IT!! ONLY FOR DEBUG
         if geom != 32684:
@@ -49,7 +51,7 @@ def update():
 # TODO Better HTTP error handling
 def generate_listing_in_database(
     response_listings: dict, geom: int, database: Database
-):
+) -> None:
     """Generate listing in database
 
     Args:
@@ -60,7 +62,7 @@ def generate_listing_in_database(
 
     for response_listing in response_listings:
         # Set all values for listing object (price_id, place_id, price, area, room_count)
-        listing = Parsing_Listing(
+        listing = ParsingListing(
             response_listing=response_listing, geom=geom
         ).extract()
 

@@ -1,3 +1,4 @@
+""" This is the api app """
 import psycopg2
 from flask import Flask, g, render_template
 
@@ -16,7 +17,7 @@ app.register_blueprint(
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
     """Before every requests, connect to database in case of any disconnection."""
     if not hasattr(app, "_request_counter"):
         app._request_counter = 0
@@ -34,11 +35,16 @@ def before_request():
 
 
 @app.route("/")
-def index():
+def index() -> str:
+    """This is the index page
+
+    Returns:
+        return the index page
+    """
     return render_template("index.html")
 
 
 @app.route("/update_data")
-def update_data():
+def update_data() -> str:
     """Update the data."""
     return update()
