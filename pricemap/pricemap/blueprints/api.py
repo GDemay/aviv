@@ -11,7 +11,6 @@ from __future__ import (
 import json
 
 import psycopg2.extras
-import requests
 from flask import Blueprint, g, jsonify
 
 from pricemap.core.config import settings
@@ -55,7 +54,6 @@ def get_price(cog):
     """
     Return the volumes distribution for the given cog in storage format
     """
-    # TODO : maybe we can do a better histogram (better computation, better volume and labels, etc.)
     serie_name = f"Prix {cog}"
     labels = {
         "0-6000": 0,
@@ -89,8 +87,6 @@ def get_price(cog):
         geom = settings.DISTRICT_GEOMS[str(cog)]
     except Exception as e:
         logger.error("Error while getting geom", e)
-
-    # geom = settings.GEOMS_DISTRICT[cog]
 
     response = {
         "serie_name": serie_name,
