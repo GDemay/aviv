@@ -128,20 +128,6 @@ class CRUDListing:
 
         return listing_id
 
-    def delete_table_listing(self):
-        """Delete table listing"""
-        sql = """
-      DROP TABLE listings
-      """
-        try:
-            self.database.db_cursor.execute(sql)
-            self.database.db.commit()
-        except Exception as e:
-            self.database.db.rollback()
-            return None
-
-        return None
-
     def get_average_price_by_place_id(self, place_id: int):
         """Get average price by place id"""
 
