@@ -79,8 +79,8 @@ def generate_listing_in_database(
         if listing.listing_id is None:
             continue
 
-        crud_listing = CRUDListing(database=database)
-        crud_listing_history = CRUDListingHistory(database=database)
+        crud_listing = CRUDListing()
+        crud_listing_history = CRUDListingHistory()
 
         # If the listing is already in the database, we update it
         # If not, we create it

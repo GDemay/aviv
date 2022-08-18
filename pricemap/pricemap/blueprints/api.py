@@ -81,7 +81,7 @@ def get_price(cog):
         rows = cursor.fetchall()
         labels[label] = len(rows)
 
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     geom = 0
     try:
         geom = settings.DISTRICT_GEOMS[str(cog)]
