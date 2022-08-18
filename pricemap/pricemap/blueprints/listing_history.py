@@ -18,7 +18,7 @@ def get(history_id: int) -> ListingHistory:
     Returns:
       ListingHistory : Return a json object with the listing history
     """
-    crud_listing_history = CRUDListingHistory(database=Database())
+    crud_listing_history = CRUDListingHistory()
     return crud_listing_history.get(history_id=history_id).dict()
 
 
@@ -32,7 +32,7 @@ def create() -> ListingHistory:
     """
 
     logger.debug("Create a listing history")
-    crud_listing_history = CRUDListingHistory(database=Database())
+    crud_listing_history = CRUDListingHistory()
 
     logger.debug("Get data from request")
     data = request.get_json()

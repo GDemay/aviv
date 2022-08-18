@@ -22,7 +22,7 @@ def get_listing(listing_id: int) -> Listing:
     Returns:
       Listing : Return a json object with the listing
     """
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     return crud_listing.get(listing_id=listing_id).dict()
 
 
@@ -34,7 +34,7 @@ def listings() -> List[Listing]:
     Returns:
         List[Listing]: List of all listings
     """
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     return crud_listing.get_all()
 
 
@@ -54,7 +54,7 @@ def update_listing(listing_id: int) -> Listing:
         return "Bad Request", HTTPStatus.BAD_REQUEST
 
     logger.debug("Update a listing")
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     listing = crud_listing.get(listing_id=listing_id)
 
     if not listing:
@@ -67,7 +67,7 @@ def update_listing(listing_id: int) -> Listing:
     if "price" in data:
         listing.price = data["price"]
         # We want to track the price history so we add a new entry in the history table
-        crud_listing_history = CRUDListingHistory(database=Database())
+        crud_listing_history = CRUDListingHistory()
         if listing_history := crud_listing_history.create(
             listing_id=listing_id, price=data["price"]
         ):
@@ -90,7 +90,7 @@ def delete_listing(listing_id: int) -> Listing:
     """Delete a listing from the database.
     params: listing_id (int): listing id
     """
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     return (
         ("Listing id deleted", 200)
         if crud_listing.delete(listing_id=listing_id)
@@ -102,7 +102,7 @@ def delete_listing(listing_id: int) -> Listing:
 @listing_blueprint.route("/", methods=["DELETE"])
 def delete_listing_table() -> str:
     """Delete the listing table from the database."""
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     crud_listing.delete()
     return "Deleted table"
 
@@ -121,5 +121,5 @@ def get_average_price_by_place_id(place_id: int) -> Listing:
     """Get the average price by m² for a given place_id.
     params: place_id (int): place id
     """
-    crud_listing = CRUDListing(database=Database())
+    crud_listing = CRUDListing()
     return crud_listing.get_average_price_by_place_id(place_id=place_id)

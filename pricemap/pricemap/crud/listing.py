@@ -1,11 +1,12 @@
 """ This is the CRUD for Listing (create, read, update, delete) """
 from pricemap.core.logger import logger
+from pricemap.database.session import Database
 from pricemap.schemas.listing import Listing
 
 
 class CRUDListing:
-    def __init__(self, database):
-        self.database = database
+    def __init__(self):
+        self.database = Database()
 
     def get(self, listing_id: int) -> Listing:
         """Get a listing from id
@@ -13,12 +14,10 @@ class CRUDListing:
         Args:
             listing_id (int):  listing id
 
-        Returns:
-            _type_:  Listing
+        Return:
+          Listing
         """
-        # TODO Ca semble casser quelque chose, à voir
-        #  if not isinstance(listing_id, int):
-        #      return None
+
         sql = """
       SELECT * FROM listings WHERE listing_id = %s
       """

@@ -1,7 +1,6 @@
 """ This is the CRUD for ListingHistory (create, read, update, delete) """
-
-
 from pricemap.core.logger import logger
+from pricemap.database.session import Database
 from pricemap.schemas.listing_history import ListingHistory
 
 
@@ -13,8 +12,8 @@ class CRUDListingHistory:
 
     # TODO Is this usefull to have database?
     # Maybe we should just call an instance of the database
-    def __init__(self, database):
-        self.database = database
+    def __init__(self):
+        self.database = Database()
 
     def get(self, history_id: int):
         """_summary_ : This function get the listing history of a history
