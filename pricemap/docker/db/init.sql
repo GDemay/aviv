@@ -8,6 +8,26 @@ CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_topology;
 CREATE EXTENSION dblink;
 
+CREATE TABLE IF NOT EXISTS listings (
+    listing_id INTEGER,
+    place_id INTEGER,
+    price INTEGER,
+    area INTEGER,
+    room_count INTEGER,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+    PRIMARY KEY (listing_id)
+);
+
+CREATE TABLE IF NOT EXISTS history_price (
+    id SERIAL,
+    listing_id INTEGER,
+    price INTEGER,
+    date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    FOREIGN KEY (listing_id) REFERENCES listings(listing_id)
+);
+
 CREATE TABLE geo_place (
     id integer NOT NULL,
     cog character varying(10) NOT NULL,

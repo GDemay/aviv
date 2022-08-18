@@ -53,7 +53,8 @@ class Database:
         listing_id INTEGER,
         price INTEGER,
         date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (id)
+        PRIMARY KEY (id),
+        FOREIGN KEY (listing_id) REFERENCES listings(listing_id)
     );
     """
         self.execute_sql(sql)
