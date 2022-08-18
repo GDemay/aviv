@@ -28,7 +28,7 @@ def update() -> None:
     database.init_history_price_table()
 
     # Loop over all places
-    for geom in settings.GEOMS_IDS:
+    for geom in settings.DISTRICT_GEOMS.values():
         page = 0
 
         # Looping until we have a HTTP code different than 200
@@ -50,7 +50,6 @@ def update() -> None:
     return "Data updated", 200
 
 
-# TODO Better HTTP error handling
 def generate_listing_in_database(
     response_listings: dict, geom: int, database: Database
 ) -> None:

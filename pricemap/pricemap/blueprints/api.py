@@ -84,7 +84,7 @@ def get_price(cog):
     crud_listing = CRUDListing()
     geom = 0
     try:
-        geom = settings.DISTRICT_GEOMS[str(cog)]
+        geom = settings.DISTRICT_GEOMS[cog]
     except Exception as e:
         logger.error("Error while getting geom", e)
 

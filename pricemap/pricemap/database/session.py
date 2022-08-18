@@ -61,7 +61,7 @@ class Database:
 
     def delete_table(self):
         sql = """
-      DROP TABLE IF EXISTS listings;
+      DROP TABLE IF EXISTS listings CASCADE;
   """
         try:
             self.execute_sql(sql)
