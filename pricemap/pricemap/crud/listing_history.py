@@ -58,10 +58,7 @@ class CRUDListingHistory:
 
         # Get the last history_price related to listing_id
 
-        logger.debug("Creating a new listing_history!")
-
         if not listing_id:
-            logger.debug("No listing_id")
             return None
         sql = """
         SELECT price FROM history_price WHERE listing_id = %s ORDER BY date DESC limit 1;
@@ -76,18 +73,13 @@ class CRUDListingHistory:
             if old_price is not None:
                 old_price = old_price[0]
                 if old_price == price:
-                    logger.debug("Price is the same")
                     return None
                 # You can add a new history of the price of the listing
-
-            logger.info("Let's continue!")
-            logger.info(f"old_price: {old_price} price: {price}")
 
         except Exception as e:
             # TODO Improve exception handling that's not good to just return None
             # Exception error should be more
-            logger.debug("Error getting old_price")
-            logger.debug(e)
+            logger.debug("Error getting old_price", e)
             self.database.db.rollback()
             return None
 
