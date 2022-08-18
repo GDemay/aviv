@@ -15,7 +15,7 @@ def update() -> None:
     We get the listings and we put them in a variable called response_listings.
     We check if the HTTP code is 200. If it is, we continue the loop.
     If the HTTP code is different than 200, we break the loop.
-    We generate the listings in the database. 
+    We generate the listings in the database.
 
     Returns:
         return a success message
