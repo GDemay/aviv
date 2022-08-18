@@ -36,24 +36,26 @@ class ParsingListing:
             int: The number of rooms
         """
 
-        room_count = 0
-        if re.search(r"Studio", self.response_listing["title"]):
-            # A studio has only one room
-            return 1
+        room_count = None
 
-        room_count = 0
         try:
-            room_count = int(
-                "".join(
-                    [
-                        s
-                        for s in self.response_listing["title"].split(
-                            "pièces"
-                        )[0]
-                        if s.isdigit()
-                    ]
+            # A studio has only one room
+            if re.search(r"Studio", self.response_listing["title"]):
+                return 1
+
+            # if not pièces, it means that there is no room count
+            if re.search(r"pièces", self.response_listing["title"]):
+                room_count = int(
+                    "".join(
+                        [
+                            s
+                            for s in self.response_listing["title"].split(
+                                "pièces"
+                            )[0]
+                            if s.isdigit()
+                        ]
+                    )
                 )
-            )
         except Exception as e:
             logging.error("Error while getting room: ", e)
         return room_count
@@ -64,32 +66,42 @@ class ParsingListing:
         Returns:
             int: The price of the listing
         """
-        price = 0
+        price = None
         try:
+          # We get all digits from the price if no digits, it means that there is no price
+          if re.search(r"\d", self.response_listing["price"]):
             price = int(
                 "".join(
-                    [s for s in self.response_listing["price"] if s.isdigit()]
+                    [
+                        s
+                        for s in self.response_listing["price"].split(" ")[0]
+                        if s.isdigit()
+                    ]
                 )
             )
         except Exception as e:
             logging.error("Error while getting price: ", e)
-
         return price
 
     def get_area(self) -> int:
-        """Get area from listing response
-
+        """
+          Get the area from the listing response
+          It checks if the listing has an area in it's title.
+          If it does, it extracts the area and returns it.
+          If it doesn't, it returns None.
         Returns:
             int:  The area of the listing response
         """
-        area = 0
+
+        area = None
         try:
-            area = int(
-                self.response_listing["title"]
-                .split("-")[1]
-                .replace(" ", "")
-                .replace("\u00a0m\u00b2", "")
-            )
+            if re.search(r"m²", self.response_listing["title"]):
+                area = int(
+                    self.response_listing["title"]
+                    .split("-")[1]
+                    .replace(" ", "")
+                    .replace("\u00a0m\u00b2", "")
+                )
 
         except Exception as e:
             logging.error("Error while getting area: ", e)

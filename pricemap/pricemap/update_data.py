@@ -10,7 +10,12 @@ from pricemap.database.session import Database
 
 
 def update() -> None:
-    """update listings in database
+    """Update the data in the database
+    We make a request to the listingapi server to get the listings.
+    We get the listings and we put them in a variable called response_listings.
+    We check if the HTTP code is 200. If it is, we continue the loop.
+    If the HTTP code is different than 200, we break the loop.
+    We generate the listings in the database. 
 
     Returns:
         return a success message
@@ -24,9 +29,6 @@ def update() -> None:
 
     # Loop over all places
     for geom in settings.GEOMS_IDS:
-        # TODO REMOVE IT!! ONLY FOR DEBUG
-        if geom != 32684:
-            break
         page = 0
 
         # Looping until we have a HTTP code different than 200
@@ -53,6 +55,13 @@ def generate_listing_in_database(
     response_listings: dict, geom: int, database: Database
 ) -> None:
     """Generate listing in database
+    We create a ParsingListing object with the response_listing and the geom
+    We extract the values for the listing object (price_id, place_id, price, area, room_count)
+    We check if listing_id is set
+    If the listing is already in the database, we update it
+    If not, we create it
+    We create a ListingHistory object with the listing_id and the price
+    We create a ListingHistory object with the listing_id and the price
 
     Args:
         response_listings dict: List of listings from request
@@ -76,9 +85,9 @@ def generate_listing_in_database(
         # If the listing is already in the database, we update it
         # If not, we create it
         if crud_listing.get(listing.listing_id) is None:
-            logger.debug("Create a listing")
+            logger.debug(f"Create listing for id:{listing.listing_id}")
             crud_listing.create(listing)
         else:
-            logger.debug("Update a listing")
+            logger.debug(f"Updating listing for id:{listing.listing_id}")
             crud_listing.update(listing)
         crud_listing_history.create(listing.listing_id, listing.price)

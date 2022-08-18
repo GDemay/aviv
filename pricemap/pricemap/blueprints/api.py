@@ -70,7 +70,7 @@ def get_price(cog):
                  price
              FROM geo_place
              JOIN listings ON geo_place.id = listings.place_id
-             WHERE area != 0 AND price / area > {min_price} AND price / area < {max_price}
+             WHERE area IS NOT NULL AND price / area > {min_price} AND price / area < {max_price}
              ;"""
         cursor = g.db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute(SQL)
