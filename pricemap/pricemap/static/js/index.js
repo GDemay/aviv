@@ -56,19 +56,21 @@ $(function() {
       var cog = feature.properties.cog;
       var url = '/api/get_price/' + cog;
       $.getJSON(url, function (data) {
-    $('#progress').show();
-    View.updateChart(data.volumes, data.labels, data.serie_name);
+        $('#progress').show();
+    View.updateChart(data.volumes, data.labels, data.serie_name, data.average);
     $('#progress').hide();
       })
     },
 
-    updateChart: function (volumes, labels, serie_name) {
+    updateChart: function (volumes, labels, serie_name, average) {
       $('#chart').highcharts({
     chart: {
       type: 'column'
-    },
-    title: {
-      text: 'Distribution des prix'
+        },
+    
+        title: {
+      text: 'Distribution des prix - Prix du m²: ' + average + ' €'
+
     },
     xAxis: {
       categories: labels

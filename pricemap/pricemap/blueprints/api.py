@@ -11,7 +11,13 @@ from __future__ import (
 import json
 
 import psycopg2.extras
+import requests
 from flask import Blueprint, g, jsonify
+
+from pricemap.core.config import settings
+from pricemap.core.logger import logger
+from pricemap.crud.listing import CRUDListing
+from pricemap.database.session import Database
 
 api = Blueprint("api", __name__)
 
@@ -77,9 +83,19 @@ def get_price(cog):
         rows = cursor.fetchall()
         labels[label] = len(rows)
 
+    crud_listing = CRUDListing(database=Database())
+    geom = 0
+    try:
+        geom = settings.DISTRICT_GEOMS[str(cog)]
+    except Exception as e:
+        logger.error("Error while getting geom", e)
+
+    # geom = settings.GEOMS_DISTRICT[cog]
+
     response = {
         "serie_name": serie_name,
         "volumes": list(labels.values()),
         "labels": list(labels.keys()),
+        "average": crud_listing.get_average_price_by_place_id(geom)["average"],
     }
     return jsonify(response)

@@ -58,6 +58,7 @@ class ParsingListing:
                 )
         except Exception as e:
             logging.error("Error while getting room: ", e)
+            return 0
         return room_count
 
     def get_price(self) -> int:
