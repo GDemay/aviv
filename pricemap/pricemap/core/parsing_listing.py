@@ -68,17 +68,19 @@ class ParsingListing:
         """
         price = None
         try:
-          # We get all digits from the price if no digits, it means that there is no price
-          if re.search(r"\d", self.response_listing["price"]):
-            price = int(
-                "".join(
-                    [
-                        s
-                        for s in self.response_listing["price"].split(" ")[0]
-                        if s.isdigit()
-                    ]
+            # We get all digits from the price if no digits, it means that there is no price
+            if re.search(r"\d", self.response_listing["price"]):
+                price = int(
+                    "".join(
+                        [
+                            s
+                            for s in self.response_listing["price"].split(" ")[
+                                0
+                            ]
+                            if s.isdigit()
+                        ]
+                    )
                 )
-            )
         except Exception as e:
             logging.error("Error while getting price: ", e)
         return price
