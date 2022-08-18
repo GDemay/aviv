@@ -83,15 +83,14 @@ class CRUDListingHistory:
             self.database.db.rollback()
             return None
 
-        logger.info("Inserting new history")
+        # Inserting new history
         sql = """ INSERT INTO history_price (listing_id, price) VALUES  (%s, %s) RETURNING id """
         try:
             # get history_id
             self.database.db_cursor.execute(sql, (listing_id, price))
             self.database.db.commit()
 
-            history = self.get(self.database.db_cursor.lastrowid)
-            logger.debug(f"history: {history}")
+            return self.get(self.database.db_cursor.lastrowid)
 
             # return self.get(self.database.db_cursor.lastrowid)
         except Exception as e:
@@ -101,19 +100,18 @@ class CRUDListingHistory:
 
     # Update the history of the price of a listing
     def update(self, history: ListingHistory):
-        """_summary_ : This function update the history of the price of a listing
-        _param_ history : The history of the listing
-        _return_ : The history of the listing
+        """This function update the history of the price of a listing
+        ListingHistory : The history of the listing
         """
         if self.get(history.history_id) is None:
             self.create(history)
             return history
 
         sql = """
-    UPDATE history_price
-    SET price = %s, date = %s
-    WHERE id = %s
-    """
+          UPDATE history_price
+          SET price = %s, date = %s
+          WHERE id = %s
+          """
         try:
             self.database.db_cursor.execute(
                 sql, (history.price, history.date, history.history_id)

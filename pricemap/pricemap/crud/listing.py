@@ -154,7 +154,6 @@ class CRUDListing:
         try:
             self.database.db_cursor.execute(sql, (place_id,))
             average = self.database.db_cursor.fetchone()
-            logger.info("Average price is good!", average)
             # transform with only one decimal
             result = average[0] / average[1] if average[1] != 0 else 0
             return {"average": round(result, 1)}
