@@ -120,3 +120,20 @@ class CRUDListingHistory:
         except Exception as e:
             self.database.db.rollback()
             return None
+
+    def delete(self, listing_id: int):
+        """This function delete the history of the price of a listing
+        _param_ listing_id : The id of the listing
+        """
+        # delete all the history of the price of the listing_id
+
+        sql = """
+        DELETE FROM history_price WHERE listing_id = %s
+        """
+        try:
+            self.database.db_cursor.execute(sql, (listing_id,))
+            self.database.db.commit()
+            return True
+        except Exception as e:
+            self.database.db.rollback()
+            return False

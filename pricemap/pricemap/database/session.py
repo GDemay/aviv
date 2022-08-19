@@ -24,8 +24,6 @@ class Database:
         room_count: number of rooms in the listing
         creation_date : date of creation of the listing
         deleted_at: date of deletion of the listing
-        active: if the listing is active or not
-        (using for deletion because we don't want to delete the listing from the database just set active to false)
         """
 
         sql = """

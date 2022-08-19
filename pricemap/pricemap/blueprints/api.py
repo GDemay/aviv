@@ -23,7 +23,6 @@ api = Blueprint("api", __name__)
 
 @api.route("/geoms")
 def geoms():
-    # TODO: you can tweak the query and/or the code if you think it's needed :)
     SQL = """
             SELECT
                 ST_ASGEOJSON(geom) as geom,
