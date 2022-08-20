@@ -98,15 +98,6 @@ def delete_listing(listing_id: int) -> Listing:
     )
 
 
-# Delete listing table
-@listing_blueprint.route("/", methods=["DELETE"])
-def delete_listing_table() -> str:
-    """Delete the listing table from the database."""
-    crud_listing = CRUDListing()
-    crud_listing.delete()
-    return "Deleted table"
-
-
 # Drop table listing
 @listing_blueprint.route("/drop", methods=["DELETE"])
 def drop_listing_table() -> str:

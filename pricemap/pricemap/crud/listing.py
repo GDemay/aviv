@@ -103,7 +103,7 @@ class CRUDListing:
             logger.error("Error while updating listing", e)
             return None
 
-        return listing.dict()
+        return listing
 
     def delete(self, listing_id: int):
         """Delete a listing from id
