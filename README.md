@@ -1,6 +1,6 @@
 # Projet - Carte des prix à Paris
 
-This is the list of functionnalities that I have implemented in this project:
+This is the list of features that I have implemented in this project:
 
 - Adding pre-commit
 - Adding black
@@ -35,9 +35,9 @@ I decided to split the project in multiple packages:
     - **listing_history_schema**: contains the schema of the listing_history table
     - **listings_schema**: contains the schema of the listings table
 
- ## Endpoints 
+ # Endpoints 
 
-# Listings:
+### Listings:
 - GET - **/listing/{listing_id}**: returns the listing with the id
 - GET - **/listing**: returns the listings
 - PUT - **/listing/{listing_id}**: updates the listing with the id
@@ -45,16 +45,16 @@ I decided to split the project in multiple packages:
 - DELETE - **/api/drop**: delete the table (for testing purposes, it should be used only in development)
 - GET - **/listing/average/{place_id}**: returns the average price of the listing with the id
 
-# Listing History:
+### Listing History:
 - GET - **/listing_history/{history_id}**: returns the listing_history with the id
 - POST - **/listing_history**: creates a new listing_history
 
-# Api
+### Api
 
 - GET - **/geoms**: Get geoms and some geometry information
 - GET - **/get_price/{cog}**: Return the volumes distribution for the given cog in storage format
 
-## Database
+# Database
 
 In order to track the history price of a listing, I created a table listing with the following fields:
  
@@ -73,12 +73,12 @@ In order to track the history of the listings, I created a table listing_history
 - price: price of the listing
 - date: area of the listing
 
-Adding a listing adds automaticaly a row in history_listing
+Adding a listing automatically  a row in history_listing
 Updating a price of a listing adds a row in history_listing if the price is different from the previous one
 
 # Improving the parsing
 
-I noticed that some data were not parsed correctly. For example we have this one :
+I noticed that some data was not parsed correctly. For example we have this one :
 ```
   {
     "title": "Appartement",
@@ -90,7 +90,7 @@ I noticed that some data were not parsed correctly. For example we have this one
 The previous parsing was not able to parse everything correctly.
 If no price / area / room_count is found, values are set to None in the database.
 
-I move the parsing from update_data to a a class named core/parsing_listing
+I move the parsing from update_data to a class named core/parsing_listing
 
 Every parsing elements are separated in functions (get_room_count, get_price, get_area, get_place_id)
 
@@ -109,12 +109,12 @@ Every parsing elements are separated in functions (get_room_count, get_price, ge
 - High availability
 - High consistency
 - Low latency
-- Scale: 10 millions users
+- Scale: 10 million users
 
 
 ## Scale:
 
-10 million d’annonces seloger.com
+10 millions d’annonces seloger.com
 Around 2 pictures per annonce
 5 MB per photo
 
