@@ -1,4 +1,5 @@
 """ This is the config for the app """
+
 from pydantic import BaseSettings
 
 

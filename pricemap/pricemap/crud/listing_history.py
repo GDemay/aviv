@@ -1,4 +1,5 @@
 """ This is the CRUD for ListingHistory (create, read, update, delete) """
+
 from pricemap.core.logger import logger
 from pricemap.database.session import Database
 from pricemap.schemas.listing_history import ListingHistory

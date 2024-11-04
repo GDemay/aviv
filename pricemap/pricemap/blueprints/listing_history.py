@@ -1,4 +1,5 @@
 """ This is the endpoints for ListingHistory """
+
 import http.client
 
 from flask import Blueprint, request
@@ -9,6 +10,7 @@ from pricemap.database.session import Database
 from pricemap.schemas.listing_history import ListingHistory
 
 listing_history_blueprint = Blueprint("listing_history_blueprint", __name__)
+
 
 # Listing an listing id
 @listing_history_blueprint.route("/<int:history_id>", methods=["GET"])
