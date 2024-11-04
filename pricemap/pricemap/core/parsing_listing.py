@@ -1,4 +1,5 @@
 """ This is Parse Listing function that parses the data from the API and insert it in the database."""
+
 import logging
 import re
 

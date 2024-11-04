@@ -1,4 +1,5 @@
 """ This is the update function that updates the data in the database."""
+
 import requests
 
 from pricemap.core.config import settings

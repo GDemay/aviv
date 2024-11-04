@@ -1,4 +1,5 @@
 """ This is the api app """
+
 import psycopg2
 from flask import Flask, g, render_template
 

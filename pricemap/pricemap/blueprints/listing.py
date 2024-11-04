@@ -1,4 +1,5 @@
 """ This is the endpoints for Listing"""
+
 import logging
 from datetime import datetime
 from http import HTTPStatus
@@ -13,6 +14,7 @@ from pricemap.database.session import Database
 from pricemap.schemas.listing import Listing
 
 listing_blueprint = Blueprint("listing_blueprint", __name__)
+
 
 # Listing an listing id
 @listing_blueprint.route("/<int:listing_id>", methods=["GET"])

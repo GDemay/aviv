@@ -1,4 +1,5 @@
 """ Init database cursor and set it to a Database class and handle some SQL requests"""
+
 import psycopg2
 from flask import g
 

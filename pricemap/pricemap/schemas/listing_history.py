@@ -1,4 +1,5 @@
 """This is the base Pydantic model for a ListingHistory"""
+
 from datetime import datetime
 from typing import Optional
 
